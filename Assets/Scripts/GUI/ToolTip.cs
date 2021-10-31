@@ -43,7 +43,7 @@ namespace Greyzone.GUI
                     msg_TMP_UI.text = _Desc;
                     msg_TMP_UI.CrossFadeAlpha(fadeOpacity, fadeDuration, ignoreTimeScale: false);
                     //tooltipSound.PlayOneShot(tooltipSound.clip);
-                    break;                 
+                    break;
             }
             StartCoroutine(HideToolTip());
         }
@@ -59,13 +59,14 @@ namespace Greyzone.GUI
             gameObject.SetActive(false);
         }
 
-        public void ViewSideInItemMessage(Item _Item, Vector3 _ItemPos, Vector3 _PlayerPos, float _Dist)
+        public void ViewSideInItemMessage(Item _Item, Vector3 _PlayerPos, float _Dist)
         {
-            transform.localPosition = _ItemPos; // _ItemPos은 로컬포지션으로
+            Vector3 itemPos = _Item.item_data.Position;
+            transform.localPosition = itemPos; // _ItemPos은 로컬포지션으로
 
             ShowMessage(MessageStyle.ON_HEAD_MSG, _Item.itemName + "을/를 습득하기", _PlayerPos);
 
-            StartCoroutine(UpdateItemMessagePos(_Item, _ItemPos, _PlayerPos, _Dist));     
+            StartCoroutine(UpdateItemMessagePos(_Item, itemPos, _PlayerPos, _Dist));     
         }
 
 
@@ -116,5 +117,6 @@ namespace Greyzone.GUI
         NORMAL_MSG,
         ON_HEAD_MSG,
         ON_SCREEN_UP_MSG,
+        ALL_ON_SCREEN_UP_MSG
     }
 }

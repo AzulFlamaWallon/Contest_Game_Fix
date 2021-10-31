@@ -93,32 +93,24 @@ public class Manager_Input : SingleToneMonoBehaviour<Manager_Input>
 
     public void onTool_1(CallbackContext _context)
     {
-        // TODO 툴버튼 전부 잠시 막아두기
-         return;
         if (!ui.Can_Move())
             return;
         m_Player_Input.Tool_1 = _context.ReadValueAsButton();
     }
     public void onTool_2(CallbackContext _context)
     {
-        // TODO 툴버튼 전부 잠시 막아두기
-        return;
         if (!ui.Can_Move())
             return;
         m_Player_Input.Tool_2 = _context.ReadValueAsButton();
     }
     public void onTool_3(CallbackContext _context)
     {
-        // TODO 툴버튼 전부 잠시 막아두기
-        return;
         if (!ui.Can_Move())
             return;
         m_Player_Input.Tool_3 = _context.ReadValueAsButton();
     }
     public void onTool_4(CallbackContext _context)
     {
-        // TODO 툴버튼 전부 잠시 막아두기
-        return;
         if (!ui.Can_Move())
             return;
         m_Player_Input.Tool_4 = _context.ReadValueAsButton();
@@ -153,11 +145,8 @@ public class Manager_Input : SingleToneMonoBehaviour<Manager_Input>
     {
         if (!ui.Can_Move())
             return;
-        Keyboard keyboard = InputSystem.GetDevice<Keyboard>();
-        m_Player_Input.Interact = keyboard.eKey.wasPressedThisFrame;
-        Debug.Log("이새끼 눌렀음 ㅇㅇ");
-        //m_Player_Input.Interact = _context.ReadValueAsButton();
-        
+        m_Player_Input.Interact = _context.ReadValueAsButton();
+        Debug.Log("눌렀다!");              
     }
     /// <summary>
     /// 발사

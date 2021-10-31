@@ -82,14 +82,14 @@ public class Weapon_StunGun : Tool, I_IK_Shotable
 
         sfx_Fire.PlayOneShot(sfx_Fire.clip); // Play Sound
 
-        pelletTrail.pellet = pelletInfo; // 펠릿트레일의 펠릿에 커스텀한 펠릿정보를 보내주자.
+        pelletTrail.currentObj = pelletInfo; // 펠릿트레일의 펠릿에 커스텀한 펠릿정보를 보내주자.
 
-        for (byte i = 0; i < pelletTrail.pellet.pelletCount; i++) // 풀링으로 교체해주자.
+        for (byte i = 0; i < pelletTrail.currentObj.pelletCount; i++) // 풀링으로 교체해주자.
         {
             Ray ray = new Ray(attacker.m_CameraAxis.position + fwdDir * 2f, fwdDir);
             GameObject trailobj = Instantiate(pelletTrail.gameObject, now_pos, attacker.m_ToolAxis.rotation);
             victim_IDs.Add(0);
-            if (Physics.Raycast(ray, out RaycastHit hit, pelletTrail.pellet.pelletDist))
+            if (Physics.Raycast(ray, out RaycastHit hit, pelletTrail.currentObj.pelletDist))
             {
                 trailobj.GetComponent<PelletTrail>().rayPositon = hit.point;
                 CharacterController victim = hit.collider.gameObject.GetComponentInParent<CharacterController>();
@@ -98,9 +98,9 @@ public class Weapon_StunGun : Tool, I_IK_Shotable
                 impact_Pos.Add(hit.point);
             }
             else
-                impact_Pos.Add(ray.GetPoint(pelletTrail.pellet.pelletDist));
+                impact_Pos.Add(ray.GetPoint(pelletTrail.currentObj.pelletDist));
 
-            trailobj.GetComponent<PelletTrail>().rayPositon = ray.GetPoint(pelletTrail.pellet.pelletDist);
+            trailobj.GetComponent<PelletTrail>().rayPositon = ray.GetPoint(pelletTrail.currentObj.pelletDist);
 
             DrawFireEffect(attacker, 0.2f);
         }

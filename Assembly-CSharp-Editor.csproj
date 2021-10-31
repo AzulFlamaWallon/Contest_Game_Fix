@@ -9,7 +9,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{46C89170-8D75-E0F3-3AEB-DE06C10C7CCC}</ProjectGuid>
+    <ProjectGuid>{F0D76DE5-09DB-47E3-B58B-1B3D2FAB46B7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp-Editor</AssemblyName>
@@ -276,11 +276,8 @@
     <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
       <HintPath>C:/Program Files (x86)/Microsoft Visual Studio Tools for Unity/16.0/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
     </Reference>
-    <Reference Include="ICSharpCode.NRefactory">
-      <HintPath>E:/Unity -Custom-/Contest_Game/Library/PackageCache/com.unity.render-pipelines.core@7.3.1/Editor/ShaderGenerator/ICSharpCode.NRefactory.dll</HintPath>
-    </Reference>
     <Reference Include="nunit.framework">
-      <HintPath>E:/Unity -Custom-/Contest_Game/Library/PackageCache/com.unity.ext.nunit@1.0.0/net35/unity-custom/nunit.framework.dll</HintPath>
+      <HintPath>E:/Unity -Custom-/Contest_Game_Fix/Library/PackageCache/com.unity.ext.nunit@1.0.0/net35/unity-custom/nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
       <HintPath>D:/Program Files/Unity2019.4.12LTS/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>
@@ -637,95 +634,77 @@
       <HintPath>D:/Program Files/Unity2019.4.12LTS/Editor/Data/MonoBleedingEdge/lib/mono/unityscript/Boo.Lang.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.TestRunner">
-      <HintPath>E:/Unity -Custom-/Contest_Game/Library/ScriptAssemblies/UnityEditor.TestRunner.dll</HintPath>
+      <HintPath>E:/Unity -Custom-/Contest_Game_Fix/Library/ScriptAssemblies/UnityEditor.TestRunner.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.TestRunner">
-      <HintPath>E:/Unity -Custom-/Contest_Game/Library/ScriptAssemblies/UnityEngine.TestRunner.dll</HintPath>
+      <HintPath>E:/Unity -Custom-/Contest_Game_Fix/Library/ScriptAssemblies/UnityEngine.TestRunner.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Timeline.Editor">
-      <HintPath>E:/Unity -Custom-/Contest_Game/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
+      <HintPath>E:/Unity -Custom-/Contest_Game_Fix/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Cinemachine">
-      <HintPath>E:/Unity -Custom-/Contest_Game/Library/ScriptAssemblies/Cinemachine.dll</HintPath>
+      <HintPath>E:/Unity -Custom-/Contest_Game_Fix/Library/ScriptAssemblies/Cinemachine.dll</HintPath>
     </Reference>
     <Reference Include="Unity.VSCode.Editor">
-      <HintPath>E:/Unity -Custom-/Contest_Game/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.RenderPipelines.Core.Editor">
-      <HintPath>E:/Unity -Custom-/Contest_Game/Library/ScriptAssemblies/Unity.RenderPipelines.Core.Editor.dll</HintPath>
+      <HintPath>E:/Unity -Custom-/Contest_Game_Fix/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.InputSystem">
-      <HintPath>E:/Unity -Custom-/Contest_Game/Library/ScriptAssemblies/Unity.InputSystem.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.RenderPipelines.Core.Runtime">
-      <HintPath>E:/Unity -Custom-/Contest_Game/Library/ScriptAssemblies/Unity.RenderPipelines.Core.Runtime.dll</HintPath>
+      <HintPath>E:/Unity -Custom-/Contest_Game_Fix/Library/ScriptAssemblies/Unity.InputSystem.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
-      <HintPath>E:/Unity -Custom-/Contest_Game/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+      <HintPath>E:/Unity -Custom-/Contest_Game_Fix/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>E:/Unity -Custom-/Contest_Game/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
+      <HintPath>E:/Unity -Custom-/Contest_Game_Fix/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Timeline">
-      <HintPath>E:/Unity -Custom-/Contest_Game/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
+      <HintPath>E:/Unity -Custom-/Contest_Game_Fix/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
     </Reference>
     <Reference Include="Unity.CollabProxy.Editor">
-      <HintPath>E:/Unity -Custom-/Contest_Game/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
+      <HintPath>E:/Unity -Custom-/Contest_Game_Fix/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Postprocessing.Editor">
-      <HintPath>E:/Unity -Custom-/Contest_Game/Library/ScriptAssemblies/Unity.Postprocessing.Editor.dll</HintPath>
+      <HintPath>E:/Unity -Custom-/Contest_Game_Fix/Library/ScriptAssemblies/Unity.Postprocessing.Editor.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary">
-      <HintPath>E:/Unity -Custom-/Contest_Game/Library/ScriptAssemblies/Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.2D.Sprite.Editor">
-      <HintPath>E:/Unity -Custom-/Contest_Game/Library/ScriptAssemblies/Unity.2D.Sprite.Editor.dll</HintPath>
+    <Reference Include="Unity.Rider.Editor">
+      <HintPath>E:/Unity -Custom-/Contest_Game_Fix/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Postprocessing.Runtime">
-      <HintPath>E:/Unity -Custom-/Contest_Game/Library/ScriptAssemblies/Unity.Postprocessing.Runtime.dll</HintPath>
+      <HintPath>E:/Unity -Custom-/Contest_Game_Fix/Library/ScriptAssemblies/Unity.Postprocessing.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="com.unity.cinemachine.editor">
-      <HintPath>E:/Unity -Custom-/Contest_Game/Library/ScriptAssemblies/com.unity.cinemachine.editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.VisualStudio.Editor">
-      <HintPath>E:/Unity -Custom-/Contest_Game/Library/ScriptAssemblies/Unity.VisualStudio.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.ShaderGraph.Editor">
-      <HintPath>E:/Unity -Custom-/Contest_Game/Library/ScriptAssemblies/Unity.ShaderGraph.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.RenderPipelines.Core.ShaderLibrary">
-      <HintPath>E:/Unity -Custom-/Contest_Game/Library/ScriptAssemblies/Unity.RenderPipelines.Core.ShaderLibrary.dll</HintPath>
+      <HintPath>E:/Unity -Custom-/Contest_Game_Fix/Library/ScriptAssemblies/com.unity.cinemachine.editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>E:/Unity -Custom-/Contest_Game/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+      <HintPath>E:/Unity -Custom-/Contest_Game_Fix/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.UI">
-      <HintPath>E:/Unity -Custom-/Contest_Game/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
+      <HintPath>E:/Unity -Custom-/Contest_Game_Fix/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
-      <Project>{7C7386D0-315A-16AC-D039-7CB875D0E633}</Project>
+      <Project>{438DAA33-CD07-4BC4-7896-F650961FE60A}</Project>
       <Name>Assembly-CSharp-firstpass</Name>
     </ProjectReference>
     <ProjectReference Include="Assembly-CSharp.csproj">
-      <Project>{C75B009E-8279-ED83-C9EF-BD4ED62C67E0}</Project>
+      <Project>{96043B66-9011-79DE-47D6-4F2065B01479}</Project>
       <Name>Assembly-CSharp</Name>
     </ProjectReference>
     <ProjectReference Include="Assembly-CSharp-Editor-firstpass.csproj">
-      <Project>{AD45564F-7AEA-A46F-0BA6-0E55B6509973}</Project>
+      <Project>{F1CD600F-152F-1BAC-9C8A-FDA879D42957}</Project>
       <Name>Assembly-CSharp-Editor-firstpass</Name>
     </ProjectReference>
     <ProjectReference Include="MeshBakerCore.csproj">
-      <Project>{F5AD37E6-103E-902E-A2F7-641D711D5D40}</Project>
+      <Project>{972E2B42-7F3D-5EE6-A297-43C397BF4BEC}</Project>
       <Name>MeshBakerCore</Name>
     </ProjectReference>
     <ProjectReference Include="MeshBakerEditor.csproj">
-      <Project>{E9BA1476-4A78-1394-97E7-7395E906CDA3}</Project>
+      <Project>{98226C59-80BA-CBAB-9256-73CD597022E3}</Project>
       <Name>MeshBakerEditor</Name>
     </ProjectReference>
     <ProjectReference Include="InputSystem.Samples.Visualizers.csproj">
-      <Project>{2CF47F2F-6BF7-2719-DFC4-C1AB632BDF43}</Project>
+      <Project>{B0A7D049-AA6A-CB53-E287-884A4D5D320E}</Project>
       <Name>InputSystem.Samples.Visualizers</Name>
     </ProjectReference>
   </ItemGroup>

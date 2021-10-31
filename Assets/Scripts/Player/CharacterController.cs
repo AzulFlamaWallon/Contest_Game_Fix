@@ -4,11 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using Network.Data;
+using Greyzone.GUI;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
-using Greyzone.GUI;
-
 /// <summary>버튼 트리거 이벤트(버튼명, 누름/뗌 여부)</summary>
 public class Event_Button_Triggered : UnityEvent<string, bool> { }
 /// <summary>툴 변경 이벤트(변경한 툴 인덱스)</summary>
@@ -47,6 +46,13 @@ public class CharacterController : MonoBehaviour
     public Event_Stunned          e_Stunned = new Event_Stunned();
     public Event_RoleSkill_Toggle e_RoleSkill_Toggle = new Event_RoleSkill_Toggle();
     public Event_SearchItem       e_SerachItem = new Event_SearchItem();
+
+    // 프로퍼티
+    public User_Profile ClientProfile
+    {
+        get => Manager_Ingame.Instance.m_Client_Profile;
+        protected set => Manager_Ingame.Instance.m_Client_Profile = value;
+    }
 
     [Header("캐릭터 스탯")]
     public int   battery = 10000;
@@ -150,7 +156,7 @@ public class CharacterController : MonoBehaviour
     private void Update()
     {
         // 시선 처리
-        if (m_MyProfile.Session_ID == Manager_Ingame.Instance.m_Client_Profile.Session_ID)
+        if (m_MyProfile.Session_ID == ClientProfile.Session_ID)
         {
             if (m_MyProfile.HP <= 0)
                 return;
@@ -171,7 +177,7 @@ public class CharacterController : MonoBehaviour
         Move();
 
         // 충돌 예지
-        if (Manager_Ingame.Instance.m_Client_Profile.Session_ID == m_MyProfile.Session_ID)
+        if (ClientProfile.Session_ID == m_MyProfile.Session_ID)
             InputManager.m_Pre_Position = Predict_Collide();
     }
 
@@ -200,7 +206,7 @@ public class CharacterController : MonoBehaviour
         {
             if (m_MyProfile.Session_ID == _Profiles[index].Session_ID)
             {
-                if (m_MyProfile.Session_ID == Manager_Ingame.Instance.m_Client_Profile.Session_ID)
+                if (m_MyProfile.Session_ID == ClientProfile.Session_ID)
                     continue;
 
                 Update_Profile(_Profiles[index]);
@@ -236,8 +242,7 @@ public class CharacterController : MonoBehaviour
         {
             e_Triggered.Invoke("Interact", _new_profile.User_Input.Interact);
 
-            User_Profile client = Manager_Ingame.Instance.m_Client_Profile;
-            if (client.Session_ID == _new_profile.Session_ID)
+            if (ClientProfile.Session_ID == _new_profile.Session_ID)
             {
                 AcquireItem();
             }
@@ -266,8 +271,8 @@ public class CharacterController : MonoBehaviour
             e_RoleSkill_Toggle.Invoke(_new_profile.m_Using_Skill);
 
         m_MyProfile = _new_profile;
-        if (Manager_Ingame.Instance.m_Client_Profile.Session_ID == m_MyProfile.Session_ID)
-            Manager_Ingame.Instance.m_Client_Profile = m_MyProfile;
+        if (ClientProfile.Session_ID == m_MyProfile.Session_ID)
+            ClientProfile = m_MyProfile;
 
         m_Output = _new_profile.User_Input;
     }
@@ -506,12 +511,14 @@ public class CharacterController : MonoBehaviour
     /// <returns></returns>
     bool IsMyCharacter()
     {
-        if(Manager_Ingame.Instance.m_Client_Profile.Session_ID == m_MyProfile.Session_ID)
+        if(ClientProfile.Session_ID == m_MyProfile.Session_ID)
         {
             return true;
         }
         return false;
     }
+
+  
 
     /// <summary>
     /// 아이템을 습득합니다.
@@ -522,12 +529,15 @@ public class CharacterController : MonoBehaviour
         Debug.Log("아이템명칭 : " + item.item.itemName + "," + "반환받은 객체이름 : " + item.name);
         if (item != null && Manager_Network.Instance != null) // 통신이 안끊겼고, 아이템일때
         {
-            if (Manager_Ingame.Instance.m_Client_Profile.Session_ID == m_MyProfile.Session_ID) // 습득자랑 현재 내 세션아디가 일치한다면 쏘자.
+            if (IsMyCharacter()) // 습득자랑 현재 내 세션아디가 일치한다면 쏘자.
             {
                 // TODO : 캐릭터가 발견한 아이템정보를 서버에 보내서, 습득 완료 및 캐릭터에 종속시키는 부분이 들어오면 될거같아요.
                 Packet_Sender.Send_Item_Get(item.item.item_data.IID);
-                
-                TooltipManager.Instance.tooltip_ScreenMsg.ShowMessage(MessageStyle.ON_SCREEN_UP_MSG, "도둑팀이" + item.name + "을/를 습득했습니다.");
+
+                TooltipManager.Instance.InvokeTooltip(x =>
+                {
+                    x.ShowMessage(MessageStyle.ON_SCREEN_UP_MSG, "도둑팀이" + item.item.itemName + "을/를 습득했습니다.");
+                }, MessageStyle.ON_SCREEN_UP_MSG);
             }
         }
     }
@@ -539,27 +549,31 @@ public class CharacterController : MonoBehaviour
     /// <returns></returns>
     ItemBase FindViewInItem()
     {
-        Collider[] colliders = Physics.OverlapSphere(m_MyProfile.Current_Pos, acquireDist, ItemLayer); // O자형태로, 탐색거리만큼 아이템 콜라이더 취득
-        for (int i = 0; i < colliders.Length; i++)
+        //if (IsMyCharacter() && ClientProfile.User_Input.Interact) 머야 왜 계속 false 판정이여
+        if (IsMyCharacter() && m_MyProfile.User_Input.Interact)
         {
-            Vector3 hitPos = colliders[i].transform.position;
-            Vector3 dir = (hitPos - m_MyProfile.Current_Pos).normalized;
-
-            if (dir.sqrMagnitude < acquireDist && m_MyProfile.User_Input.Interact) // 범위안에 들어와서 눌렀을때
+            Collider[] colliders = Physics.OverlapSphere(m_MyProfile.Current_Pos, acquireDist, ItemLayer.value); // O자형태로, 탐색거리만큼 아이템 콜라이더 취득
+            for (int i = 0; i < colliders.Length; i++)
             {
-                // 중간 장애물이 없을때
-                if (Physics.Raycast(m_MyProfile.Current_Pos, dir, out RaycastHit hitinfo, acquireDist, ItemLayer.value))
+                Vector3 hitPos = colliders[i].transform.position;
+                Vector3 dir = (hitPos - m_MyProfile.Current_Pos).normalized;
+
+                if (dir.sqrMagnitude < acquireDist) // 범위안이면
                 {
-                    Debug.Log("와 템 주웠음");
-                    Debug.DrawLine(m_MyProfile.Current_Pos, hitinfo.point, Color.red);
-                    IsHit = false;
-                    return hitinfo.collider.GetComponentInChildren<ItemBase>();
+                    // 중간 장애물이 없을때
+                    if (Physics.Raycast(m_MyProfile.Current_Pos, dir, out RaycastHit hitinfo, acquireDist, ItemLayer.value))
+                    {
+                        Debug.Log("와 템 주웠음");
+                        Debug.DrawLine(m_MyProfile.Current_Pos, hitinfo.point, Color.red);
+                        IsHit = true;
+                        return hitinfo.collider.GetComponentInChildren<ItemBase>();
+                    }
+                    else
+                    {
+                        Debug.DrawLine(m_MyProfile.Current_Pos, hitPos, Color.blue);
+                        IsHit = false;
+                    }
                 }
-                else
-                {
-                    Debug.DrawLine(m_MyProfile.Current_Pos, hitPos, Color.blue);
-                    IsHit = false;
-                }             
             }
         }
 
@@ -580,15 +594,13 @@ public class CharacterController : MonoBehaviour
                 {                 
                     Debug.DrawLine(m_MyProfile.Current_Pos, hitinfo.point, Color.red);
                     Debug.Log("해당 장소엔 아이템이 있습니다");
-                    IsHit = false;
+                    IsHit = true;
                     return hitinfo.collider.GetComponentInChildren<ItemBase>(); // 해당 아이템 반환
                 }
                 else
                 {
                     Debug.DrawLine(m_MyProfile.Current_Pos, hitPos, Color.blue);
                     IsHit = true;
-                   
-                    Debug.Log("해당 장소엔 아이템이 존재하지 않습니다.");
                 }
             }
         }
@@ -596,29 +608,31 @@ public class CharacterController : MonoBehaviour
     }
 
     void FindOnFieldItem()
-    {   
+    {
         ItemBase item = FindViewInNoPressItem();
         if (item != null)
         {
-            TooltipManager.Instance.tooltip_HeadMessage.ViewSideInItemMessage(item.item, item.item.item_data.Position, m_MyProfile.Current_Pos, acquireDist);          
-            TooltipManager.Instance.tooltip_HeadMessage.DrawOnHeadMessage(this.gameObject);
-            TooltipManager.Instance.tooltip_ScreenMsg.ShowMessage(MessageStyle.ON_SCREEN_UP_MSG, item.item.name + "을 찾음");
+            TooltipManager.Instance.InvokeTooltip(x =>
+            {
+                x.ViewSideInItemMessage(item.item, m_MyProfile.Current_Pos, acquireDist);
+                x.DrawOnHeadMessage(this.gameObject);
+                x.ShowMessage(MessageStyle.ON_HEAD_MSG, item.item.itemName + "아이템을 찾음 ㅅㄱ", m_CameraAxis.position);
+            }, MessageStyle.ON_HEAD_MSG);
         }
         else
         {
-            //TooltipManager.Instance.tooltip_HeadMessage.ShowMessage(MessageStyle.ON_HEAD_MSG, "안돼!!", m_MyProfile.Current_Pos);
-            TooltipManager.Instance.tooltip_ScreenMsg.ShowMessage(MessageStyle.ON_SCREEN_UP_MSG, "아이템을 못찾았어!");
+            TooltipManager.Instance.InvokeTooltip(x =>
+            {
+                x.ShowMessage(MessageStyle.ON_HEAD_MSG, "아이템을 못찾았어!", m_CameraAxis.position);
+            }, MessageStyle.ON_HEAD_MSG);
         }
     }
 
-    /*
+#if UNITY_EDITOR
     private void OnDrawGizmosSelected()
      {
-        FindViewInItem();
-
         Handles.color = IsHit ? Color.cyan : Color.green;
-        Handles.DrawSolidArc(m_CameraAxis.position, Vector3.up, m_CameraAxis.forward, 45 / 2, acquireDist);
-        Handles.DrawSolidArc(m_CameraAxis.position, Vector3.up, m_CameraAxis.forward, -45 / 2, acquireDist);
-     }*/
-
+        Handles.DrawSolidDisc(m_CameraAxis.position, Vector3.up, acquireDist);
+     }
+#endif
 }

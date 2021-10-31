@@ -435,9 +435,19 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
     {
         foreach (GameObject obj in m_Item_Objects)
         {
+            Debug.Log("IngameManager::PlaeyrGetItem(iid) 진입"); // 1031 요기도 확인
             // obj 에게서 item_data 빼내기
+            Item_Data itemDat = obj.GetComponent<ItemBase>().item.item_data;
             // 대조해서 맞으면 오브젝트를 제거
-            
+            if(itemDat.IID == _instance_id)
+            {
+                Greyzone.GUI.TooltipManager.Instance.InvokeTooltip(_msg =>
+                {
+                    _msg.ShowMessage(Greyzone.GUI.MessageStyle.ON_SCREEN_UP_MSG, "[디버그] 도둑 - 아이템 획득 판정 받음.\n 먹은 아이템을 삭제합니다.");
+                }, Greyzone.GUI.MessageStyle.ON_SCREEN_UP_MSG);
+                m_Item_Objects.Remove(obj);
+                Destroy(obj);
+            }
         }
     }
 
