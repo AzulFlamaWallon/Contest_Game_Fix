@@ -38,7 +38,7 @@ public class PlayerState : MonoBehaviour
 
     public void PlayerSpawn_Exit()
     {
-
+        
     }
     /*
     * PLAYER_IDLE

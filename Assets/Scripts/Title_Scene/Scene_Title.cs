@@ -24,8 +24,11 @@ public class Scene_Title : MonoBehaviour
     public InputField m_register_pw;
     public InputField m_register_nickname;
 
+    private Text m_AppVer;
+
     void Awake()
     {
+        m_AppVer = GetComponentInChildren<Text>();
         Update_SubState(false);
     }
 
@@ -35,11 +38,8 @@ public class Scene_Title : MonoBehaviour
             yield return new WaitForEndOfFrame();
 
         Manager_Network.Instance.e_RegisterResult.AddListener(new UnityAction<bool>(When_Get_Register_Result));
-    }
 
-    void Update()
-    {
-
+        m_AppVer.text = "AppVer : " + Application.version;
     }
 
     /// <summary>

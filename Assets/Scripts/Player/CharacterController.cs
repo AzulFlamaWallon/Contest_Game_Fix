@@ -528,7 +528,6 @@ public class CharacterController : MonoBehaviour
         }
     }
 
-    // TODO. 아이템 탐색 알고리즘 부분인데, 너무 급한 나머지 일단 코드가 개판입니다 ㅈㅅㅈㅅ
     /// <summary>
     /// 아이템을 탐색합니다.
     /// </summary>
@@ -541,10 +540,13 @@ public class CharacterController : MonoBehaviour
             for (int i = 0; i < colliders.Length; i++)
             {
                 Vector3 hitPos = colliders[i].transform.position;
+                Vector3 hitPos_next = colliders[i + 1].transform.position;
+
                 Vector3 dir = (hitPos - m_MyProfile.Current_Pos).normalized;
+                Vector3 dir_next = (hitPos_next - m_MyProfile.Current_Pos).normalized;
 
                 if (dir.sqrMagnitude < acquireDist) // 범위안이면
-                {
+                {                   
                     // 중간 장애물이 없을때
                     if (Physics.Raycast(m_MyProfile.Current_Pos, dir, out RaycastHit hitinfo, acquireDist, ItemLayer.value))
                     {

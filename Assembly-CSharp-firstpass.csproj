@@ -863,21 +863,21 @@
       <Project>{972E2B42-7F3D-5EE6-A297-43C397BF4BEC}</Project>
       <Name>MeshBakerCore</Name>
     </ProjectReference>
-    <ProjectReference Include="MeshBakerEditor.csproj">
-      <Project>{98226C59-80BA-CBAB-9256-73CD597022E3}</Project>
-      <Name>MeshBakerEditor</Name>
-    </ProjectReference>
-    <ProjectReference Include="InputSystem.Samples.Visualizers.csproj">
-      <Project>{B0A7D049-AA6A-CB53-E287-884A4D5D320E}</Project>
-      <Name>InputSystem.Samples.Visualizers</Name>
-    </ProjectReference>
     <ProjectReference Include="MonsterLove.StateMachine.Samples.csproj">
       <Project>{9968B46F-E5BD-93F1-9078-23C5EA767A00}</Project>
       <Name>MonsterLove.StateMachine.Samples</Name>
     </ProjectReference>
+    <ProjectReference Include="MeshBakerEditor.csproj">
+      <Project>{98226C59-80BA-CBAB-9256-73CD597022E3}</Project>
+      <Name>MeshBakerEditor</Name>
+    </ProjectReference>
     <ProjectReference Include="MonsterLove.StateMachine.Runtime.csproj">
       <Project>{47B20591-7E40-B6E7-6354-648CB157AC3C}</Project>
       <Name>MonsterLove.StateMachine.Runtime</Name>
+    </ProjectReference>
+    <ProjectReference Include="InputSystem.Samples.Visualizers.csproj">
+      <Project>{B0A7D049-AA6A-CB53-E287-884A4D5D320E}</Project>
+      <Name>InputSystem.Samples.Visualizers</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

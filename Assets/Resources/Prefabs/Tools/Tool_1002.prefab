@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3880324707183500170}
   - component: {fileID: 1637338869314290793}
   m_Layer: 13
-  m_Name: Tool_5
+  m_Name: Tool_1002
   m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
