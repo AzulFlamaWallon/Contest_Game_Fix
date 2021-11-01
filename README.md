@@ -5,3 +5,10 @@
 ## 소스 폴더 ##
 Assets//
 
+## 사용된 외부 코드/기술 ##
+메쉬베이커
+
+상태머신
+
+MonsterLove StateMachine - https://github.com/thefuntastic/Unity3d-Finite-State-Machine
+
