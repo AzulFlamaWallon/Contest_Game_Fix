@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
+using Greyzone.GUI;
 
 public class Event_RoundUpdate : UnityEvent<GameObject, Minimap> { }
 public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
@@ -85,7 +86,7 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
         if (m_Game_Started)
         {
             m_Heartbeat_Wait += Time.fixedDeltaTime;
-            if (m_Heartbeat_Wait > 5.0) // 하트비트가 너무 안 오면 타이틀로
+            if (m_Heartbeat_Wait > 5.0f) // 하트비트가 너무 안 오면 타이틀로
             {
                 Quit_Game();
             }
@@ -140,6 +141,13 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
         // 인게임 씬 로드
         SceneManager.LoadScene("Ingame");
         yield return new WaitForSecondsRealtime(2.0f);
+
+        /*AsyncOperation loadingame = SceneManager.LoadSceneAsync("Ingame");
+        loadingame.allowSceneActivation = false;
+        while(!loadingame.isDone)
+        {
+            yield return new WaitForSecondsRealtime(2.0f);
+        }*/
 
         // hud 생성
         ui.m_Ingame_Scene_Loader.Add_Msg("create hud");
@@ -293,7 +301,21 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
         ui.Lock_Cursor(false);
         Add_Delayed_Coroutine(End_Game_Process());
         // 터졌으면 터진대로 처리해줄 것
+        switch (_reason)
+        {
+            case SESSION_END_REASON.NOT_ENDED:
+                break;
+            case SESSION_END_REASON.NORMALLY_END:
+                break;
+            case SESSION_END_REASON.USER_TOO_SHORT:
+                break;
+            case SESSION_END_REASON.CRITICAL_ERROR:
+                CustomPopupWindow.Show("에러", "세션간 크리티컬 에러가 발생했어요.");
+                Quit_Game();
+                break;
+        }
     }
+
     IEnumerator End_Game_Process()
     {
         Ingame_UI ui = Ingame_UI.Instance;
@@ -405,50 +427,52 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
     }
     public void Create_Items()
     {
-        foreach (GameObject obj in m_Item_Objects)
-            Destroy(obj);
-        m_Item_Objects.Clear();
+        ClearItemObjects();
 
-        foreach (Item_Data item in m_Items)
+        int count = m_Items.Count;
+
+        for (var i = 0; i < count; ++i)
         {
-            GameObject item_prefab = Resources.Load<GameObject>("Prefabs/Tools/Tool_" + item.OID);
+            GameObject item_prefab = Resources.Load<GameObject>("Prefabs/Tools/Tool_" + m_Items[i].OID);
             if (item_prefab == null)
             {
-                Debug.LogWarning(item.OID + "번 아이템 프리팹 없음");
+                Debug.LogWarning(m_Items[i].OID + "번 아이템 프리팹 없음");
                 continue;
             }
             GameObject item_object = Instantiate(item_prefab);
-            item_object.transform.position = item.Position;
-            item_object.transform.rotation = Quaternion.Euler(item.Rotation);
+            item_object.transform.position = m_Items[i].Position;
+            item_object.transform.rotation = Quaternion.Euler(m_Items[i].Rotation);
             ItemBase item_script = item_object.GetComponentInChildren<ItemBase>();
             if (item_script == null)
             {
-                Debug.LogWarning(item.OID + "번 아이템 내에 Item 스크립트 없음");
+                Debug.LogWarning(m_Items[i].OID + "번 아이템 내에 Item 스크립트 없음");
                 continue;
             }
-            item_script.item.item_data = item;
+            item_script.item.item_data = m_Items[i];
 
             m_Item_Objects.Add(item_object);
         }
     }
+
     public void Player_Get_Item(int _instance_id)
     {
-        foreach (GameObject obj in m_Item_Objects)
+        int obj_lenth = m_Item_Objects.Count;
+        for(var i = 0; i < obj_lenth; ++i)
         {
-            Debug.Log("IngameManager::PlaeyrGetItem(iid) 진입"); // 1031 요기도 확인
             // obj 에게서 item_data 빼내기
-            Item_Data itemDat = obj.GetComponent<ItemBase>().item.item_data;
+            Item_Data itemDat = m_Item_Objects[i].GetComponentInChildren<ItemBase>().item.item_data;
             // 대조해서 맞으면 오브젝트를 제거
-            if(itemDat.IID == _instance_id)
+            if (itemDat.IID == _instance_id)
             {
-                Greyzone.GUI.TooltipManager.Instance.InvokeTooltip(_msg =>
+                TooltipManager.Instance.InvokeTooltip(_msg =>
                 {
-                    _msg.ShowMessage(Greyzone.GUI.MessageStyle.ON_SCREEN_UP_MSG, "[디버그] 도둑 - 아이템 획득 판정 받음.\n 먹은 아이템을 삭제합니다.");
-                }, Greyzone.GUI.MessageStyle.ON_SCREEN_UP_MSG);
-                m_Item_Objects.Remove(obj);
-                Destroy(obj);
+                    _msg.ShowMessage(MessageStyle.ON_SCREEN_UP_MSG, "[디버그] 도둑 - 아이템 획득 판정 받음.\n 먹은 아이템을 삭제합니다.");
+                }, MessageStyle.ON_SCREEN_UP_MSG);
+
+                Destroy(m_Item_Objects[i].gameObject);
+                m_Item_Objects.RemoveAt(i);
             }
-        }
+        }        
     }
 
     public void Add_Round_Object(GameObject _obj)
@@ -460,5 +484,14 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
         foreach (GameObject obj in m_Round_Objects)
             Destroy(obj);
         m_Round_Objects.Clear();
+    }
+    public void ClearItemObjects()
+    {
+        int obj_lenth = m_Item_Objects.Count;
+        for (var i = 0; i < obj_lenth; ++i)
+        {
+            Destroy(m_Item_Objects[i].gameObject);
+        }
+        m_Item_Objects.Clear();
     }
 }

@@ -536,7 +536,7 @@ public class CharacterController : MonoBehaviour
 
                 TooltipManager.Instance.InvokeTooltip(x =>
                 {
-                    x.ShowMessage(MessageStyle.ON_SCREEN_UP_MSG, "도둑팀이" + item.item.itemName + "을/를 습득했습니다.");
+                    x.ShowMessage(MessageStyle.ON_SCREEN_UP_MSG, "도둑팀이 " + item.item.itemName + "을/를 습득했습니다.");
                 }, MessageStyle.ON_SCREEN_UP_MSG);
             }
         }
