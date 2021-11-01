@@ -1005,7 +1005,7 @@ namespace DigitalOpus.MB.MBEditor
                         outName = outName.Replace(Application.dataPath, "");
                         outName = "Assets" + outName;
                         GameObject go = new GameObject(prefabBaker.prefabRows[i].sourcePrefab.name);
-                        prefabBaker.prefabRows[i].resultPrefab = PrefabUtility.CreatePrefab(outName, go);
+                        prefabBaker.prefabRows[i].resultPrefab = PrefabUtility.SaveAsPrefabAsset(go, outName);
                         GameObject.DestroyImmediate(go);
                         numCreated++;
                     }

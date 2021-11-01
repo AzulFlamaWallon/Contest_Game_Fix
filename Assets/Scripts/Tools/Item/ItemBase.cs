@@ -2,7 +2,7 @@
 
 public class ItemBase : Tool
 {
-    public Item item;
+    public ItemInfo item;
 
     public override void onFire(bool _pressed)
     {

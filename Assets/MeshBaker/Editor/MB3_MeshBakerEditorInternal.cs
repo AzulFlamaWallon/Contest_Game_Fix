@@ -557,7 +557,7 @@ namespace DigitalOpus.MB.MBEditor
                 string fullName = folder + "/" + prefabName + ".prefab";
                 fullName = AssetDatabase.GenerateUniqueAssetPath(fullName);
                 Debug.Log(fullName);
-                PrefabUtility.CreatePrefab(fullName, go);
+                PrefabUtility.SaveAsPrefabAsset(go, fullName);
                 GameObject.DestroyImmediate(go);
                 SerializedObject so = new SerializedObject(mom);
                 so.FindProperty("resultPrefab").objectReferenceValue =  (GameObject)AssetDatabase.LoadAssetAtPath(fullName, typeof(GameObject));

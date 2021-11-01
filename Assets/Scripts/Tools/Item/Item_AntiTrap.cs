@@ -33,14 +33,14 @@ public class Item_AntiTrap : ItemBase
         {
             Collider[] colliders = Physics.OverlapSphere(ownerpos, Range);
 
-            if (colliders.Any((x) => x.GetComponent<Item>().itemType == ItemType.TRAP))
+            if (colliders.Any((x) => x.GetComponent<ItemInfo>().itemType == ItemType.TRAP))
             {
                 for (int i = 0; i < colliders.Length; i++)
                 {
                     if (colliders[i].CompareTag("Trap"))
                     {
                         // 함정이 무력화 되었다는 문구 띄워보면 어떨까..
-                        Destroy(colliders[i]);
+                        Destroy(colliders[i].gameObject);
                     }
                 }
             }

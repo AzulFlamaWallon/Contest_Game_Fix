@@ -396,7 +396,7 @@ namespace DigitalOpus.MB.MBEditor
 
                     // Generate a new prefab
                     GameObject go = new GameObject(baker.name);
-                    GameObject pf = PrefabUtility.CreatePrefab(pathName, go);
+                    GameObject pf = PrefabUtility.SaveAsPrefabAsset(go, pathName);
 
                     // Configure the baker to bake into the prefab
                     baker.resultPrefab = pf;

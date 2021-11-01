@@ -3,7 +3,7 @@ using UnityEngine;
 
 [CreateAssetMenu(fileName = "Item", menuName = "GreyZoneTools/Create Energy Item")]
 [Serializable]
-public class EnergyItem : Item
+public class EnergyItem : ItemInfo
 {
     public ushort itemEnergy;
 

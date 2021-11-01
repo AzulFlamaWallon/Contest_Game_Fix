@@ -426,7 +426,7 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
         ClearItemObjects();
 
         int count = m_Items.Count;
-        count += 2;
+        
         for (var i = 0; i < count; ++i)
         {
             GameObject item_prefab = Resources.Load<GameObject>("Prefabs/Tools/Tool_" + m_Items[i].OID);
@@ -462,11 +462,11 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
             {
                 TooltipManager.Instance.InvokeTooltip(_msg =>
                 {
-                    _msg.ShowMessage(MessageStyle.ON_SCREEN_UP_MSG, "도둑 - 아이템 획득 판정 받음.\n 먹은 아이템을 삭제합니다.");
+                    _msg.ShowMessage(MessageStyle.ON_SCREEN_UP_MSG, "도둑팀 먹은 아이템을 삭제합니다.");
                 }, MessageStyle.ON_SCREEN_UP_MSG);
 
                 Destroy(m_Item_Objects[i].gameObject);
-                m_Item_Objects.RemoveAt(i);
+                m_Item_Objects.RemoveAt(i);                
             }
         }        
     }

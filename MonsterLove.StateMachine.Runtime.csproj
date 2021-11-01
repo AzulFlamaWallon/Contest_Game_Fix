@@ -9,10 +9,10 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{F1CD600F-152F-1BAC-9C8A-FDA879D42957}</ProjectGuid>
+    <ProjectGuid>{47B20591-7E40-B6E7-6354-648CB157AC3C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <AssemblyName>Assembly-CSharp-Editor-firstpass</AssemblyName>
+    <AssemblyName>MonsterLove.StateMachine.Runtime</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <BaseDirectory>.</BaseDirectory>
@@ -26,7 +26,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -35,7 +35,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <NoConfig>true</NoConfig>
@@ -48,7 +48,7 @@
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <UnityProjectGenerator>Unity/VSTU</UnityProjectGenerator>
     <UnityProjectGeneratorVersion>4.8.2.0</UnityProjectGeneratorVersion>
-    <UnityProjectType>EditorPlugins:7</UnityProjectType>
+    <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
     <UnityVersion>2019.4.12f1</UnityVersion>
   </PropertyGroup>
@@ -64,59 +64,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Plugins\Excelsior\CSFHI\Scripts\Editor\InterfaceAnimManagerEditor.cs" />
-    <Compile Include="Assets\Plugins\Excelsior\CSFHI\Scripts\Editor\InterfaceAnmElementEditor.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\Baker\BakerInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\Baker\GenericBakerInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\Baker\Helpers\AnimationUtilityExtended.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\Baker\Helpers\SaveClipFolderPanel.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\Baker\HumanoidBakerInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\FinalIK\AimIKInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\FinalIK\AimPoserInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\FinalIK\ArmIKInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\FinalIK\BipedIKInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\FinalIK\BipedIKSolversInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\FinalIK\CCDIKInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\FinalIK\ConstraintsInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\FinalIK\FABRIKInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\FinalIK\FABRIKRootInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\FinalIK\FingerRigInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\FinalIK\FullBodyBipedIKInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\FinalIK\GroundingInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\FinalIK\IKEffectorInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\FinalIK\IKExecutionOrderInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\FinalIK\IKInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\FinalIK\IKSolverAimInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\FinalIK\IKSolverArmInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\FinalIK\IKSolverFABRIKRootInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\FinalIK\IKSolverFullBodyBipedInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\FinalIK\IKSolverFullBodyInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\FinalIK\IKSolverHeuristicInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\FinalIK\IKSolverInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\FinalIK\IKSolverLegInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\FinalIK\IKSolverLimbInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\FinalIK\IKSolverLookAtInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\FinalIK\IKSolverTrigonometricInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\FinalIK\InteractionTargetInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\FinalIK\InteractionTriggerInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\FinalIK\LegIKInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\FinalIK\LimbIKInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\FinalIK\LookAtIKInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\FinalIK\RotationLimitAngleInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\FinalIK\RotationLimitHingeInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\FinalIK\RotationLimitInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\FinalIK\RotationLimitPolygonalInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\FinalIK\RotationLimitSplineInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\FinalIK\TrigonometricIKInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\FinalIK\VRIKInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\FinalIK\_DEMOS\BendGoalInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\Shared Demo Scripts\CameraControllerInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\Shared Scripts\BipedReferencesInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\Shared Scripts\CommentsInspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\Shared Scripts\Inspector.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\Shared Scripts\InspectorCommentDrawer.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\Shared Scripts\LargeHeaderDrawer.cs" />
-    <Compile Include="Assets\Plugins\RootMotion\Editor\Shared Scripts\SerializedContent.cs" />
+    <Compile Include="Assets\MonsterLove\Runtime\Drivers\StateDriverRunner.cs" />
+    <Compile Include="Assets\MonsterLove\Runtime\Drivers\StateDriverUnity.cs" />
+    <Compile Include="Assets\MonsterLove\Runtime\Events\StateEvent.cs" />
+    <Compile Include="Assets\MonsterLove\Runtime\StateMachine.cs" />
+    <Compile Include="Assets\MonsterLove\Runtime\StateMachineRunner.cs" />
+    <Compile Include="Assets\MonsterLove\Runtime\StateMapping.cs" />
+    <None Include="Assets\MonsterLove\Runtime\MonsterLove.StateMachine.Runtime.asmdef" />
     <Reference Include="UnityEngine">
       <HintPath>D:/Program Files/Unity2019.4.12LTS/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>
@@ -314,9 +268,6 @@
     </Reference>
     <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
       <HintPath>C:/Program Files (x86)/Microsoft Visual Studio Tools for Unity/16.0/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.framework">
-      <HintPath>E:/Unity -Custom-/Contest_Game_Fix/Library/PackageCache/com.unity.ext.nunit@1.0.0/net35/unity-custom/nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
       <HintPath>D:/Program Files/Unity2019.4.12LTS/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>
@@ -672,81 +623,14 @@
     <Reference Include="Boo.Lang">
       <HintPath>D:/Program Files/Unity2019.4.12LTS/Editor/Data/MonoBleedingEdge/lib/mono/unityscript/Boo.Lang.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEditor.TestRunner">
-      <HintPath>E:/Unity -Custom-/Contest_Game_Fix/Library/ScriptAssemblies/UnityEditor.TestRunner.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.TestRunner">
-      <HintPath>E:/Unity -Custom-/Contest_Game_Fix/Library/ScriptAssemblies/UnityEngine.TestRunner.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Timeline.Editor">
-      <HintPath>E:/Unity -Custom-/Contest_Game_Fix/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Cinemachine">
-      <HintPath>E:/Unity -Custom-/Contest_Game_Fix/Library/ScriptAssemblies/Cinemachine.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.VSCode.Editor">
-      <HintPath>E:/Unity -Custom-/Contest_Game_Fix/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.InputSystem">
-      <HintPath>E:/Unity -Custom-/Contest_Game_Fix/Library/ScriptAssemblies/Unity.InputSystem.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.TextMeshPro.Editor">
-      <HintPath>E:/Unity -Custom-/Contest_Game_Fix/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+    <Reference Include="UnityEditor.UI">
+      <HintPath>E:/Unity -Custom-/Contest_Game_Fix/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>E:/Unity -Custom-/Contest_Game_Fix/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.Timeline">
-      <HintPath>E:/Unity -Custom-/Contest_Game_Fix/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.CollabProxy.Editor">
-      <HintPath>E:/Unity -Custom-/Contest_Game_Fix/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Postprocessing.Editor">
-      <HintPath>E:/Unity -Custom-/Contest_Game_Fix/Library/ScriptAssemblies/Unity.Postprocessing.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Rider.Editor">
-      <HintPath>E:/Unity -Custom-/Contest_Game_Fix/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Postprocessing.Runtime">
-      <HintPath>E:/Unity -Custom-/Contest_Game_Fix/Library/ScriptAssemblies/Unity.Postprocessing.Runtime.dll</HintPath>
-    </Reference>
-    <Reference Include="com.unity.cinemachine.editor">
-      <HintPath>E:/Unity -Custom-/Contest_Game_Fix/Library/ScriptAssemblies/com.unity.cinemachine.editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.TextMeshPro">
-      <HintPath>E:/Unity -Custom-/Contest_Game_Fix/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEditor.UI">
-      <HintPath>E:/Unity -Custom-/Contest_Game_Fix/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
-    </Reference>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
-      <Project>{438DAA33-CD07-4BC4-7896-F650961FE60A}</Project>
-      <Name>Assembly-CSharp-firstpass</Name>
-    </ProjectReference>
-    <ProjectReference Include="MeshBakerCore.csproj">
-      <Project>{972E2B42-7F3D-5EE6-A297-43C397BF4BEC}</Project>
-      <Name>MeshBakerCore</Name>
-    </ProjectReference>
-    <ProjectReference Include="MeshBakerEditor.csproj">
-      <Project>{98226C59-80BA-CBAB-9256-73CD597022E3}</Project>
-      <Name>MeshBakerEditor</Name>
-    </ProjectReference>
-    <ProjectReference Include="InputSystem.Samples.Visualizers.csproj">
-      <Project>{B0A7D049-AA6A-CB53-E287-884A4D5D320E}</Project>
-      <Name>InputSystem.Samples.Visualizers</Name>
-    </ProjectReference>
-    <ProjectReference Include="MonsterLove.StateMachine.Samples.csproj">
-      <Project>{9968B46F-E5BD-93F1-9078-23C5EA767A00}</Project>
-      <Name>MonsterLove.StateMachine.Samples</Name>
-    </ProjectReference>
-    <ProjectReference Include="MonsterLove.StateMachine.Runtime.csproj">
-      <Project>{47B20591-7E40-B6E7-6354-648CB157AC3C}</Project>
-      <Name>MonsterLove.StateMachine.Runtime</Name>
-    </ProjectReference>
-  </ItemGroup>
+  <ItemGroup></ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

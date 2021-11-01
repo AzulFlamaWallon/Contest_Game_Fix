@@ -79,17 +79,9 @@ public class CharacterController : MonoBehaviour
 
     private bool IsHit = false;
 
-    Renderer[] m_Renderers;
+    public PlayerState playerState;
 
-    // 컨트롤러 상태 인자 등 변동예정
-    [Flags]
-    public enum PlayerState
-    {
-        PLAYER_IDLE,
-        PLAYER_ONHIT,
-        PLAYER_ONSTUN,
-        PLAYER_DEATH
-    }
+    Renderer[] m_Renderers;
 
     IEnumerator Start()
     {

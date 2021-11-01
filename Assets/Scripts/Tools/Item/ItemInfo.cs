@@ -4,7 +4,7 @@ using Network.Data;
 
 [CreateAssetMenu(fileName = "Item", menuName = "GreyZoneTools/Create Item")]
 [Serializable]
-public class Item : ScriptableObject
+public class ItemInfo : ScriptableObject
 {
     public Item_Data item_data;
     public ushort itemID;

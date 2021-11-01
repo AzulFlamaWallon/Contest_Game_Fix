@@ -59,7 +59,7 @@ namespace Greyzone.GUI
             gameObject.SetActive(false);
         }
 
-        public void ViewSideInItemMessage(Item _Item, Vector3 _PlayerPos, float _Dist)
+        public void ViewSideInItemMessage(ItemInfo _Item, Vector3 _PlayerPos, float _Dist)
         {
             Vector3 itemPos = _Item.item_data.Position;
             transform.localPosition = itemPos; // _ItemPos은 로컬포지션으로
@@ -72,7 +72,7 @@ namespace Greyzone.GUI
 
 
         #region 코루틴
-        IEnumerator UpdateItemMessagePos(Item _Item, Vector3 _ItemPos, Vector3 _PlayerPos, float _Dist)
+        IEnumerator UpdateItemMessagePos(ItemInfo _Item, Vector3 _ItemPos, Vector3 _PlayerPos, float _Dist)
         {
             yield return new WaitForSeconds(0.5f);
             while (true)

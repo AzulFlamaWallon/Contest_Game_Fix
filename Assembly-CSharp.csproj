@@ -164,6 +164,7 @@
     <Compile Include="Assets\Scripts\Player\CharacterController.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerCameraActionManager.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerInputAction.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerState.cs" />
     <Compile Include="Assets\Scripts\PopupWindow\CustomPopupWindow.cs" />
     <Compile Include="Assets\Scripts\PopupWindow\Match_Window.cs" />
     <Compile Include="Assets\Scripts\PopupWindow\Small_Window.cs" />
@@ -174,8 +175,8 @@
     <Compile Include="Assets\Scripts\Title_Scene\Scene_Title.cs" />
     <Compile Include="Assets\Scripts\Tools\I_IK_Shotable.cs" />
     <Compile Include="Assets\Scripts\Tools\Item\EnergyItem.cs" />
-    <Compile Include="Assets\Scripts\Tools\Item\Item.cs" />
     <Compile Include="Assets\Scripts\Tools\Item\ItemBase.cs" />
+    <Compile Include="Assets\Scripts\Tools\Item\ItemInfo.cs" />
     <Compile Include="Assets\Scripts\Tools\Item\Item_AntiTrap.cs" />
     <Compile Include="Assets\Scripts\Tools\Item\Item_BatteryRecovery.cs" />
     <Compile Include="Assets\Scripts\Tools\Item\Item_Bind.cs" />
@@ -863,6 +864,14 @@
     <ProjectReference Include="InputSystem.Samples.Visualizers.csproj">
       <Project>{B0A7D049-AA6A-CB53-E287-884A4D5D320E}</Project>
       <Name>InputSystem.Samples.Visualizers</Name>
+    </ProjectReference>
+    <ProjectReference Include="MonsterLove.StateMachine.Samples.csproj">
+      <Project>{9968B46F-E5BD-93F1-9078-23C5EA767A00}</Project>
+      <Name>MonsterLove.StateMachine.Samples</Name>
+    </ProjectReference>
+    <ProjectReference Include="MonsterLove.StateMachine.Runtime.csproj">
+      <Project>{47B20591-7E40-B6E7-6354-648CB157AC3C}</Project>
+      <Name>MonsterLove.StateMachine.Runtime</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
