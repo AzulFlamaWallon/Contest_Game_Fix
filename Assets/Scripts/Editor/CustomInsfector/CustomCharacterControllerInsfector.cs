@@ -34,7 +34,7 @@ public class CustomCharacterControllerInsfector : Editor
             EditorGUILayout.LabelField(new GUIContent("나의 캐릭터 프로필값"), UILayout.CustomizeGUIStyle(new CustomLabel(FontStyle.Bold, 12, Color.white, new CustomTex2D(10, 5, Color.black))));
             UseProperty("m_MyProfile");
             UseProperty("m_Is_Stunned");
-            UseProperty("ClientProfile", "인게임 클라 프로필", "인게임 클라 프로필");
+            //UseProperty("ClientProfile", "인게임 클라 프로필", "인게임 클라 프로필");
         }
 
         EditorGUILayout.LabelField(new GUIContent("캐릭터 스탯 및 물리메테리얼"), UILayout.CustomizeGUIStyle(new CustomLabel(FontStyle.Bold, 12, Color.white, new CustomTex2D(10, 5, Color.black))));

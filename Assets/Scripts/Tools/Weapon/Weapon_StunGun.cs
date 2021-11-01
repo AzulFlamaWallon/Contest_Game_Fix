@@ -143,9 +143,12 @@ public class Weapon_StunGun : Tool, I_IK_Shotable
             {
                 Packet_Sender.Send_Shot_Fire((UInt64)PROTOCOL.MNG_INGAME
                     | (UInt64)PROTOCOL_INGAME.SHOT | (UInt64)PROTOCOL_INGAME.SHOT_FIRE,
-                    _VictimSecIDs, _ImpactPos);
+                    _VictimSecIDs, _ImpactPos);              
             }
         }
+
+        victim_IDs.Clear();
+        impact_Pos.Clear();
     }
 
     public override void onInteract(bool _pressed)

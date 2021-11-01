@@ -2,10 +2,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Net.Sockets;
 using System.Threading;
 using UnityEngine;
-
+#if UNITY_ASSERTIONS
+using UnityEngine.Assertions;
+#endif
 /// <summary>
 /// 네트워크 관리자
 /// </summary>
@@ -13,7 +16,7 @@ public class Manager_Network : MonoBehaviour
 {
     public static Manager_Network Instance;
 
-    public bool m_Connected { get; private set; } // 서버 연결 상태
+    public bool Connected { get; private set; } // 서버 연결 상태
 
     public TcpClient m_Socket = null; // TCP소켓
     public KJH_Crypto_2 m_Encryptor = null; // 암호화
@@ -48,7 +51,7 @@ public class Manager_Network : MonoBehaviour
     public Event_Item_Spawn e_ItemSpawn = new Event_Item_Spawn();
     public Event_Item_Get e_ItemGet = new Event_Item_Get();
 
-    public static bool Debug_Toggle = false; // 디버그 로거 표현 여부
+    public static bool Debug_Toggle = true; // 디버그 로거 표현 여부
     public static void Log(string _msg) // 로그 쓰기
     {
         if (Debug_Toggle)
@@ -72,7 +75,7 @@ public class Manager_Network : MonoBehaviour
 
     private void Update()
     {
-        if (m_Connected) // 연결이 된 경우
+        if (Connected) // 연결이 된 경우
             m_Packet?.Update();
     }
 
@@ -84,13 +87,19 @@ public class Manager_Network : MonoBehaviour
             m_Socket.GetStream().Close();
             m_Socket.Close();
         }
-        m_Socket = new TcpClient();
-
+        m_Socket = new TcpClient
+        {
+            // TODO : 상호작용 이상현상 확인으로 노딜레이 활성화 by.1101
+            NoDelay = true
+        };
+#if UNITY_ASSERTIONS
+        Assert.IsTrue(m_Socket.NoDelay);
+#endif
         try
         {
             // 연결 시도, 실패시 SocketException
             m_Socket.Connect(m_IP, int.Parse(m_Port));
-            m_Connected = true;
+            Connected = true;
 
             // 패킷 핸들러 오브젝트 초기화
             m_Packet.Init();
@@ -116,7 +125,7 @@ public class Manager_Network : MonoBehaviour
             m_Socket.Dispose();
         }
         m_Socket = null;
-        m_Connected = false;
+        Connected = false;
     }
 
 
@@ -127,7 +136,7 @@ public class Manager_Network : MonoBehaviour
     public bool Login(string _id, string _pw)
     {
         // 서버 연결
-        if (!m_Connected)
+        if (!Connected)
             Connect_To_Server();
 
         // 로그인 패킷 전송
@@ -146,7 +155,7 @@ public class Manager_Network : MonoBehaviour
     public bool Register(string _id, string _pw, string _nickname)
     {
         // 서버 연결
-        if (!m_Connected)
+        if (!Connected)
             Connect_To_Server();
 
         StartCoroutine(Register_Process(_id, _pw, _nickname));
@@ -173,7 +182,7 @@ public class Manager_Network : MonoBehaviour
     /// </summary>
     public void Logout()
     {
-        if (!m_Connected)
+        if (!Connected)
             return;
 
         // TODO 디스커넥트 패킷 전송
@@ -191,35 +200,42 @@ public class Manager_Network : MonoBehaviour
 /// 패킷은 Packer에서 먼저 패킹 작업이 이루어져야한다
 /// 패킷을 받을 때에도 Packer에서 가공해서 인게임에서 써야 한다
 /// </summary>
+///
+/*
 public class Manager_Packet
 {
     public static Manager_Packet Instance;
 
-    public Queue<Task> m_SendQueue; // 서버에게 보내는 패킷 모음, 선입 선출
-    public Queue<Task> m_RecvQueue; // 서버에게서 받는 패킷 모음, 선입 선출
+    public ConcurrentQueue<Task> m_SendQueue; // 서버에게 보내는 패킷 모음, 선입 선출
+    public ConcurrentQueue<Task> m_RecvQueue; // 서버에게서 받는 패킷 모음, 선입 선출
 
     Manager_Network m_NetworkManager; // 모체
     Task_Handler m_Task_Handler;
     Thread t_Receiver;
+    Thread t_Sender;
 
     public Manager_Packet(Manager_Network _network)
     {
         Instance = this;
         m_NetworkManager = _network;
         m_Task_Handler = new Task_Handler();
-        m_SendQueue = new Queue<Task>();
-        m_RecvQueue = new Queue<Task>();
+        m_SendQueue = new ConcurrentQueue<Task>();
+        m_RecvQueue = new ConcurrentQueue<Task>();
     }
 
     public void Init()
     {
         if (t_Receiver != null)
             t_Receiver.Abort();
+        if (t_Sender != null)
+            t_Sender.Abort();
 
-        m_SendQueue = new Queue<Task>();
-        m_RecvQueue = new Queue<Task>();
+        m_SendQueue = new ConcurrentQueue<Task>();
+        m_RecvQueue = new ConcurrentQueue<Task>();
         t_Receiver = new Thread(Thread_Recv);
         t_Receiver.Start();
+        t_Sender = new Thread(Thread_Send);
+        t_Sender.Start();
     }
 
     public void End_Thread()
@@ -227,24 +243,36 @@ public class Manager_Packet
         if (t_Receiver != null)
             t_Receiver.Abort();
         t_Receiver = null;
+        if (t_Sender != null)
+            t_Sender.Abort();
+        t_Sender = null;
     }
 
     public void Update()
     {
-        SendAll();
+        //SendAll();
         RecvAll();
     }
 
     // Recv 전용 스레드
     void Thread_Recv()
     {
-        m_RecvQueue.Clear();
+        //m_RecvQueue.Clear();
         while (true)
         {
             Task task = new Task(); // 새로운 버퍼를 만들고
             PacketRecv(ref task.buffer, ref task.datasize); // 받고
             task.datasize = (task.datasize / 8 + 1) * 8;
             m_RecvQueue.Enqueue(task); // 받으면 받기 큐에 그것을 투입
+        }
+    }
+
+    void Thread_Send()
+    {
+        while (true)
+        {
+            Thread.Sleep(100);
+            SendAll();
         }
     }
 
@@ -269,7 +297,7 @@ public class Manager_Packet
     // 프로토콜 포장
     public void PackProtocol(ref UInt64 _protocol, UInt64 __protocol)
     {
-        _protocol = _protocol | __protocol;
+        _protocol |= __protocol;
     }
 
     public void PacketSend(Task _task)
@@ -292,9 +320,8 @@ public class Manager_Packet
     {
         try
         {
-            while (m_SendQueue.Count > 0)
+            while (m_SendQueue.TryDequeue(out Task task))
             {
-                Task task = m_SendQueue.Dequeue();
                 PacketSend(task);
 
                 Manager_Network.Log("Sended - " + task.buffer[0] + "/" + task.buffer[1] + "/" + task.buffer[2] + "/" + task.buffer[3]);
@@ -330,12 +357,165 @@ public class Manager_Packet
     {
         try
         {
-            while (m_RecvQueue.Count > 0)
+            while (m_RecvQueue.TryDequeue(out Task task))
             {
-                Task task = new Task();
+                Manager_Network.Log("Received...");
+                m_Task_Handler.Perform_Task(m_NetworkManager, task); // 받은 패킷과 프로토콜을 전달, 인게임 요소들에 반영
+            }
+        }
+        catch (Exception)
+        {
+            m_NetworkManager.e_Disconnected.Invoke();
+        }
+    }
 
-                task = m_RecvQueue.Dequeue();
+    #endregion
+}*/
 
+public class Manager_Packet
+{
+    public static Manager_Packet Instance;
+
+    public ConcurrentQueue<Task> m_SendQueue; // 서버에게 보내는 패킷 모음, 선입 선출
+    public ConcurrentQueue<Task> m_RecvQueue; // 서버에게서 받는 패킷 모음, 선입 선출
+
+    Manager_Network m_NetworkManager; // 모체
+    Task_Handler m_Task_Handler;
+    Thread t_Receiver;
+
+    public Manager_Packet(Manager_Network _network)
+    {
+        Instance = this;
+        m_NetworkManager = _network;
+        m_Task_Handler = new Task_Handler();
+        m_SendQueue = new ConcurrentQueue<Task>();
+        m_RecvQueue = new ConcurrentQueue<Task>();
+    }
+
+    public void Init()
+    {
+        if (t_Receiver != null)
+            t_Receiver.Abort();
+
+        m_SendQueue = new ConcurrentQueue<Task>();
+        m_RecvQueue = new ConcurrentQueue<Task>();
+        t_Receiver = new Thread(Thread_Recv);
+        t_Receiver.Start();
+    }
+
+    public void End_Thread()
+    {
+        if (t_Receiver != null)
+            t_Receiver.Abort();
+        t_Receiver = null;
+    }
+
+    public void Update()
+    {
+       //SendAll();
+        RecvAll();
+    }
+
+    // Recv 전용 스레드
+    void Thread_Recv()
+    {
+        //m_RecvQueue.Clear(); 닷넷 5.0부터 지원
+        while (true)
+        {
+            Task task = new Task(); // 새로운 버퍼를 만들고
+            PacketRecv(ref task.buffer, ref task.datasize); // 받고
+            task.datasize = (task.datasize / 8 + 1) * 8;
+            m_RecvQueue.Enqueue(task); // 받으면 받기 큐에 그것을 투입
+        }
+    }
+
+    public byte[] SetBuffer(UInt64 _protocol, byte[] _buffer, ref int _size)
+    {
+        byte[] data = new byte[1024];
+        int place = 0;
+
+        Buffer.BlockCopy(BitConverter.GetBytes(_protocol), 0, data, place, sizeof(UInt64));
+        place += sizeof(UInt64);
+
+        Buffer.BlockCopy(_buffer, 0, data, place, _buffer.Length);
+        place += _buffer.Length;
+
+        _size = place;
+
+        return data;
+    }
+
+    #region SEND
+
+    // 프로토콜 포장
+    public void PackProtocol(ref UInt64 _protocol, UInt64 __protocol)
+    {
+        _protocol |= __protocol;
+    }
+
+    public void PacketSend(Task _task)
+    {
+        NetworkStream ns;
+
+        ns = m_NetworkManager.m_Socket.GetStream();
+
+        ns.Write(_task.buffer, 0, _task.datasize);
+    }
+
+    // 보내기 큐에 패킷 투입
+    public void SendEnqueue(Task _task)
+    {
+        //m_SendQueue.Enqueue(_task);
+        PacketSend(_task);
+    }
+
+    // 보내기 큐를 비울 때까지 계속해서 보내기
+    public void SendAll()
+    {
+        int total_packets = 0;
+        try
+        {
+            while (m_SendQueue.TryDequeue(out Task task))
+            {              
+                PacketSend(task);
+
+                Manager_Network.Log("Sended - " + task.buffer[0] + "/" + task.buffer[1] + "/" + task.buffer[2] + "/" + task.buffer[3]);
+                total_packets++;
+            }
+        }
+        catch (Exception)
+        {
+            Manager_Network.Log("send error.");
+            m_NetworkManager.e_Disconnected.Invoke();
+        }
+        Manager_Network.Log("A total of " + total_packets + " packets sent");
+    }
+
+    #endregion
+
+    #region RECV
+
+    // 서버에게서 패킷 받기
+    public void PacketRecv(ref byte[] _buf, ref int _size)
+    {
+        byte[] size = new byte[4];
+
+        NetworkStream ns = m_NetworkManager.m_Socket.GetStream();
+
+        int recv = ns.Read(size, 0, 4);
+        _size = BitConverter.ToInt16(size, 0);
+        Manager_Network.Log("target size = " + _size);
+
+        recv = ns.Read(_buf, 0, _size);
+    }
+
+    // 받기 큐를 비울 때까지 계속해서 받기
+    void RecvAll()
+    {
+        try
+        {
+            while (m_RecvQueue.TryDequeue(out Task task))
+            {
                 Manager_Network.Log("Received...");
                 m_Task_Handler.Perform_Task(m_NetworkManager, task); // 받은 패킷과 프로토콜을 전달, 인게임 요소들에 반영
             }

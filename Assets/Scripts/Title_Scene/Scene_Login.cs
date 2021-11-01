@@ -103,7 +103,7 @@ public class Scene_Login : MonoBehaviour
         yield return new WaitForSecondsRealtime(2.0f);
 
 
-        if (!Manager_Network.Instance.m_Connected)
+        if (!Manager_Network.Instance.Connected)
         {
             m_Loading_Text.color = new Color(0.5f, 0f, 0f, 1f);
             StartCoroutine(Flickering_Text("aborted\nclosed server", false));

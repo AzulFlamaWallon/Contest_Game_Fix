@@ -299,19 +299,15 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
 
         m_Game_Started = false;
         ui.Lock_Cursor(false);
-        Add_Delayed_Coroutine(End_Game_Process());
         // 터졌으면 터진대로 처리해줄 것
         switch (_reason)
         {
-            case SESSION_END_REASON.NOT_ENDED:
-                break;
-            case SESSION_END_REASON.NORMALLY_END:
-                break;
-            case SESSION_END_REASON.USER_TOO_SHORT:
-                break;
             case SESSION_END_REASON.CRITICAL_ERROR:
                 CustomPopupWindow.Show("에러", "세션간 크리티컬 에러가 발생했어요.");
                 Quit_Game();
+                break;
+            default:
+                Add_Delayed_Coroutine(End_Game_Process());
                 break;
         }
     }
@@ -430,7 +426,7 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
         ClearItemObjects();
 
         int count = m_Items.Count;
-
+        count += 2;
         for (var i = 0; i < count; ++i)
         {
             GameObject item_prefab = Resources.Load<GameObject>("Prefabs/Tools/Tool_" + m_Items[i].OID);
@@ -466,7 +462,7 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
             {
                 TooltipManager.Instance.InvokeTooltip(_msg =>
                 {
-                    _msg.ShowMessage(MessageStyle.ON_SCREEN_UP_MSG, "[디버그] 도둑 - 아이템 획득 판정 받음.\n 먹은 아이템을 삭제합니다.");
+                    _msg.ShowMessage(MessageStyle.ON_SCREEN_UP_MSG, "도둑 - 아이템 획득 판정 받음.\n 먹은 아이템을 삭제합니다.");
                 }, MessageStyle.ON_SCREEN_UP_MSG);
 
                 Destroy(m_Item_Objects[i].gameObject);

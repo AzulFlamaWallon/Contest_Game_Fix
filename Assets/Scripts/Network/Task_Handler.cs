@@ -20,7 +20,7 @@ public class Task_Handler
     public void Perform_Task(Manager_Network _manager, Task _task)
     {
         UInt64 protocol = 0;
-        Manager_Network.Log("버퍼 정보 - " + BitConverter.ToString(_task.buffer));
+        //Manager_Network.Log("버퍼 정보 - " + BitConverter.ToString(_task.buffer));
         _task.Decrypt(Manager_Network.Instance.m_Encryptor);
         GetProtocol(_task.buffer, ref protocol);
 
@@ -63,7 +63,7 @@ public class Task_Handler
 
             //Manager_Network.Log("키 대입");
             Manager_Network.Instance.m_Encryptor = new KJH_Crypto_2(code);
-            Manager_Network.Log("암호화 키 취득 " + BitConverter.ToString(code));
+            //Manager_Network.Log("암호화 키 취득 " + BitConverter.ToString(code));
             return;
         }
         return;

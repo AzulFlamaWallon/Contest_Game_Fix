@@ -22,36 +22,32 @@ namespace Network.Data
             // 버퍼의 내용에서 사이즈 빼서 옮겨 담기
             byte[] temp_byte = new byte[datasize];
             Buffer.BlockCopy(buffer, 4, temp_byte, 0, datasize);
-
-            Manager_Network.Log("암호화 전 버퍼 - " + BitConverter.ToString(temp_byte));
+            //Manager_Network.Log("암호화 전 버퍼 - " + BitConverter.ToString(temp_byte));
 
             // 내용 암호화
-            byte[] encrypted = null;
-            encrypted = _encryptor.Encrypt(ref temp_byte);
+            byte[] encrypted = _encryptor.Encrypt(ref temp_byte);
             datasize = encrypted.Length;
 
             // 암호화 한 것을 버퍼로 다시 옮기기
             Buffer.BlockCopy(encrypted, 0, buffer, 4, datasize);
             Buffer.BlockCopy(BitConverter.GetBytes(datasize), 0, buffer, 0, sizeof(int));
             datasize += sizeof(int);
-            Manager_Network.Log("(사이즈포함) 암호화 된 버퍼 크기 = " + datasize);
+            //Manager_Network.Log("(사이즈포함) 암호화 된 버퍼 크기 = " + datasize);
         }
         public void Decrypt(KJH_Crypto_2 _decryptor)
         {
             if (_decryptor == null)
                 return;
 
-            Manager_Network.Log("복호화 수행 크기 = " + datasize);
+            //Manager_Network.Log("복호화 수행 크기 = " + datasize);
 
             // 버퍼의 내용에서 사이즈 빼서 옮겨 담기
             byte[] temp_byte = new byte[datasize];
             Buffer.BlockCopy(buffer, 0, temp_byte, 0, datasize);
-
             // 내용 복호화
-            byte[] decrypted = null;
-            decrypted = _decryptor.Decrypt(ref temp_byte);
+            byte[] decrypted = _decryptor.Decrypt(ref temp_byte);
 
-            Manager_Network.Log("복호화 완료");
+            //Manager_Network.Log("복호화 완료");
 
             // 복호화 한 것을 버퍼로 다시 옮기기
             Buffer.BlockCopy(decrypted, 0, buffer, 0, datasize);

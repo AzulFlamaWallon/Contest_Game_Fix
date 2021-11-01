@@ -89,10 +89,10 @@
 			float alpha = step(_CutRender, noise.r);
 			float outline = step(noise.r, _CutRender * _OutThinkness);
 
-			float4 glowColor = saturate(clamp(_GlowColor.rgb * mask.a * _GlowColor.a));
+			//float4 glowColor = saturate(clamp(_GlowColor.rgb * mask.a * _GlowColor.a));
 
 			o.Albedo = col.rgb;
-			o.Emission = (outline * _OutColor.rgb) + (col.rgb * mask.rgb) + (glowColor * (1 - _BurnLevel)) * _Opacity;
+			o.Emission = (outline * _OutColor.rgb) + (col.rgb * mask.rgb) + ((clamp(_GlowColor.rgb * mask.a * _GlowColor.a)) * (1 - _BurnLevel))) * _Opacity;
             o.Alpha = alpha * _Opacity;
 		}
 		ENDCG

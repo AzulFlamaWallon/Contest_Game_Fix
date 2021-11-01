@@ -8,10 +8,6 @@ public class GUI_Scoreboard : MonoBehaviour
     public GUI_Element_Profile m_Guard_Profile;
     public GUI_Element_Profile[] m_Rogue_Profiles;
 
-    void Start()
-    {
-    }
-
     public void Register_Event()
     {
         Manager_Network.Instance.e_HeartBeat.AddListener(Update_Scoreboard);

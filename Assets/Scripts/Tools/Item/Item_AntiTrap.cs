@@ -33,7 +33,6 @@ public class Item_AntiTrap : ItemBase
         {
             Collider[] colliders = Physics.OverlapSphere(ownerpos, Range);
 
-            Collider collider;
             if (colliders.Any((x) => x.GetComponent<Item>().itemType == ItemType.TRAP))
             {
                 for (int i = 0; i < colliders.Length; i++)

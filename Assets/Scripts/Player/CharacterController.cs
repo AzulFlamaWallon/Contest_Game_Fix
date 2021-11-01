@@ -19,8 +19,6 @@ public class Event_Stunned : UnityEvent<int> { }
 /// <summary>스킬 이벤트</summary>
 public class Event_RoleSkill_Toggle : UnityEvent<bool> { }
 
-public class Event_SearchItem : UnityEvent { }
-
 /// <summary>
 /// 200913 주현킴
 /// 캐릭터 컨트롤러 베이스 클래스
@@ -37,7 +35,7 @@ public class CharacterController : MonoBehaviour
     private UnityAction<Session_RoundData, User_Profile[]> m_PlayerUpdatePosEvts; // 위치 갱신 이벤트
     private UnityAction<UInt16, UInt16> m_PlayerDamageEvts; // 피해 이벤트
     private UnityAction<UInt16, UInt16> m_PlayerStunEvts; // 스턴 이벤트
-    private UnityAction                 m_SearchItem;
+    
 
     // 이벤트
     public Event_Button_Triggered e_Triggered = new Event_Button_Triggered();
@@ -45,7 +43,7 @@ public class CharacterController : MonoBehaviour
     public Event_Damaged          e_Damaged = new Event_Damaged();
     public Event_Stunned          e_Stunned = new Event_Stunned();
     public Event_RoleSkill_Toggle e_RoleSkill_Toggle = new Event_RoleSkill_Toggle();
-    public Event_SearchItem       e_SerachItem = new Event_SearchItem();
+    
 
     // 프로퍼티
     public User_Profile ClientProfile
@@ -72,7 +70,9 @@ public class CharacterController : MonoBehaviour
     public Vector3   m_Before_Position;
     public const float ASCENDING_LIMIT = 0.6f;
 
+    [Header("아이템 루팅")]
     [CustomRange(0, 30.0f)] // 어라 생성자 그대로 가버리는데 이거;;
+    public bool  acquireEnabled = false;
     public float acquireDist = 10.0f;
     public float itemSearchDuration = 1.0f;
     public LayerMask ItemLayer;
@@ -80,6 +80,16 @@ public class CharacterController : MonoBehaviour
     private bool IsHit = false;
 
     Renderer[] m_Renderers;
+
+    // 컨트롤러 상태 인자 등 변동예정
+    [Flags]
+    public enum PlayerState
+    {
+        PLAYER_IDLE,
+        PLAYER_ONHIT,
+        PLAYER_ONSTUN,
+        PLAYER_DEATH
+    }
 
     IEnumerator Start()
     {
@@ -93,13 +103,13 @@ public class CharacterController : MonoBehaviour
         m_PlayerUpdatePosEvts = new UnityAction<Session_RoundData, User_Profile[]>(When_Player_UpdatePosition);
         m_PlayerDamageEvts = new UnityAction<ushort, ushort>(Damage);
         m_PlayerStunEvts = new UnityAction<ushort, ushort>(Stun);
-        m_SearchItem = new UnityAction(FindOnFieldItem);
+        
 
         if (Manager_Network.Instance == null)
         {
             // 네트워크 매니저 없음 -> 로컬 디버그 모드
             Manager_Ingame.Instance.e_FakeInput.AddListener(m_PlayerInputEvts);
-            e_SerachItem.AddListener(m_SearchItem);
+
             StartCoroutine(Update_FieldOnItem());
         }
         else
@@ -109,7 +119,7 @@ public class CharacterController : MonoBehaviour
             Manager_Network.Instance.e_HeartBeat.AddListener(m_PlayerUpdatePosEvts);
             Manager_Network.Instance.e_PlayerHit.AddListener(m_PlayerDamageEvts);
             Manager_Network.Instance.e_PlayerStun.AddListener(m_PlayerStunEvts);
-            e_SerachItem.AddListener(m_SearchItem);
+            
             StartCoroutine(Update_FieldOnItem());
         }
 
@@ -131,7 +141,6 @@ public class CharacterController : MonoBehaviour
             if (Manager_Ingame.Instance != null) // 아직 인게임 인스턴스가 파괴되지않았을때만
             {
                 Manager_Ingame.Instance.e_FakeInput.RemoveListener(m_PlayerInputEvts);
-                e_SerachItem.RemoveListener(m_SearchItem);
             }
         }
         else
@@ -140,7 +149,6 @@ public class CharacterController : MonoBehaviour
             Manager_Network.Instance.e_HeartBeat.RemoveListener(m_PlayerUpdatePosEvts);
             Manager_Network.Instance.e_PlayerHit.RemoveListener(m_PlayerDamageEvts);
             Manager_Network.Instance.e_PlayerStun.RemoveListener(m_PlayerStunEvts);
-            e_SerachItem.RemoveListener(m_SearchItem);
         }
     }
 
@@ -150,7 +158,7 @@ public class CharacterController : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(itemSearchDuration);
-            e_SerachItem.Invoke();    
+            FindOnFieldItem();
         }
     }
     private void Update()
@@ -238,15 +246,8 @@ public class CharacterController : MonoBehaviour
         if (m_Output.Fire != _new_profile.User_Input.Fire && _new_profile.User_Input.Fire == true)
             e_Triggered.Invoke("Fire", _new_profile.User_Input.Fire);
         // 킹호작용!
-        if (m_Output.Interact != _new_profile.User_Input.Interact && _new_profile.User_Input.Interact == true)
-        {
-            e_Triggered.Invoke("Interact", _new_profile.User_Input.Interact);
-
-            if (ClientProfile.Session_ID == _new_profile.Session_ID)
-            {
-                AcquireItem();
-            }
-        }      
+        if (m_Output.Interact != _new_profile.User_Input.Interact && _new_profile.User_Input.Interact == true)         
+            e_Triggered.Invoke("Interact", _new_profile.User_Input.Interact);              
 
         bool debug_tool_change = false;
         if (Manager_Ingame.Instance.m_DebugMode)
@@ -271,19 +272,15 @@ public class CharacterController : MonoBehaviour
             e_RoleSkill_Toggle.Invoke(_new_profile.m_Using_Skill);
 
         m_MyProfile = _new_profile;
-        if (ClientProfile.Session_ID == m_MyProfile.Session_ID)
+        if (IsMyCharacter())
             ClientProfile = m_MyProfile;
 
         m_Output = _new_profile.User_Input;
-    }
 
-    public bool IsPlayerHaveJob(UInt16 _JobIndex)
-    {
-        if (m_MyProfile.Role_Index == _JobIndex)
+        if (ClientProfile.User_Input.Interact)
         {
-            return true;
+            AcquireItem();
         }
-        return false;
     }
 
     public bool IsGuard()
@@ -525,20 +522,17 @@ public class CharacterController : MonoBehaviour
     /// </summary>
     public void AcquireItem()
     {
-        ItemBase item = FindViewInItem(); // 만약 아이템을 발견했다면 해당 아이템을 가져와서
-        Debug.Log("아이템명칭 : " + item.item.itemName + "," + "반환받은 객체이름 : " + item.name);
+        ItemBase item = FindViewInItem(); // 만약 아이템을 발견했다면 해당 아이템을 가져와서      
         if (item != null && Manager_Network.Instance != null) // 통신이 안끊겼고, 아이템일때
         {
-            if (IsMyCharacter()) // 습득자랑 현재 내 세션아디가 일치한다면 쏘자.
+            Debug.Log("아이템명칭 : " + item.item.itemName + "," + "반환받은 객체이름 : " + item.name);
+            // TODO : 캐릭터가 발견한 아이템정보를 서버에 보내서, 습득 완료 및 캐릭터에 종속시키는 부분이 들어오면 될거같아요.
+            Packet_Sender.Send_Item_Get(item.item.item_data.IID);
+            
+            TooltipManager.Instance.InvokeTooltip(_msg =>
             {
-                // TODO : 캐릭터가 발견한 아이템정보를 서버에 보내서, 습득 완료 및 캐릭터에 종속시키는 부분이 들어오면 될거같아요.
-                Packet_Sender.Send_Item_Get(item.item.item_data.IID);
-
-                TooltipManager.Instance.InvokeTooltip(x =>
-                {
-                    x.ShowMessage(MessageStyle.ON_SCREEN_UP_MSG, "도둑팀이 " + item.item.itemName + "을/를 습득했습니다.");
-                }, MessageStyle.ON_SCREEN_UP_MSG);
-            }
+                _msg.ShowMessage(MessageStyle.ON_SCREEN_UP_MSG, "도둑팀이 " + item.item.itemName + "을/를 습득했습니다.");
+            }, MessageStyle.ON_SCREEN_UP_MSG);
         }
     }
 
@@ -549,8 +543,7 @@ public class CharacterController : MonoBehaviour
     /// <returns></returns>
     ItemBase FindViewInItem()
     {
-        //if (IsMyCharacter() && ClientProfile.User_Input.Interact) 머야 왜 계속 false 판정이여
-        if (IsMyCharacter() && m_MyProfile.User_Input.Interact)
+        if (IsMyCharacter())
         {
             Collider[] colliders = Physics.OverlapSphere(m_MyProfile.Current_Pos, acquireDist, ItemLayer.value); // O자형태로, 탐색거리만큼 아이템 콜라이더 취득
             for (int i = 0; i < colliders.Length; i++)
@@ -615,7 +608,7 @@ public class CharacterController : MonoBehaviour
             TooltipManager.Instance.InvokeTooltip(x =>
             {
                 x.ViewSideInItemMessage(item.item, m_MyProfile.Current_Pos, acquireDist);
-                x.DrawOnHeadMessage(this.gameObject);
+                x.DrawOnHeadMessage(m_CameraAxis.gameObject);
                 x.ShowMessage(MessageStyle.ON_HEAD_MSG, item.item.itemName + "아이템을 찾음 ㅅㄱ", m_CameraAxis.position);
             }, MessageStyle.ON_HEAD_MSG);
         }

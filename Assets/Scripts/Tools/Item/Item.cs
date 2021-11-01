@@ -12,22 +12,7 @@ public class Item : ScriptableObject
     public string itemName;
     public string itemDesc;
     public byte itemCount;
-
-    public Item() { }
-    public Item(ushort _ID, ItemType _Type, string _Name, string _Desc, byte _Count)
-    {
-        itemID = _ID;
-        itemType = _Type;
-        itemName = _Name;
-        itemDesc = _Desc;
-        itemCount = _Count;       
-    }
-    
-    public void SetItemData(Vector3 _Pos, Vector3 _Rot)
-    {
-        item_data.Position = _Pos;
-        item_data.Rotation = _Rot;
-    }
+    public AudioSource[] itemSnds;
 }
 
 [Flags]
