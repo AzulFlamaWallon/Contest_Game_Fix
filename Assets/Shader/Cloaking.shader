@@ -48,7 +48,7 @@
 		sampler2D _NoiseTex;
 		float4	  _OutColor;
 		float	  _OutThinkness;
-		float	  _CutRender;
+		fixed	  _CutRender;
 
 
 		struct Input {
@@ -85,14 +85,15 @@
             o.Normal = UnpackNormal(tex2D (_BumpMap, IN.uv_MainTex));
 
 			// Setting_Dissolve 
-			float4 noise = tex2D(_NoiseTex, IN.uv_NoiseTex);
+			fixed4 noise = tex2D(_NoiseTex, IN.uv_NoiseTex);
 			float alpha = step(_CutRender, noise.r);
 			float outline = step(noise.r, _CutRender * _OutThinkness);
 
-			//float4 glowColor = saturate(clamp(_GlowColor.rgb * mask.a * _GlowColor.a));
+			fixed4 glowColor = saturate(clamp(_GlowColor.rgb * mask.a * _GlowColor.a + _DamageColor.rgb * _DamageColor.a));
 
 			o.Albedo = col.rgb;
-			o.Emission = (outline * _OutColor.rgb) + (col.rgb * mask.rgb) + ((clamp(_GlowColor.rgb * mask.a * _GlowColor.a)) * (1 - _BurnLevel))) * _Opacity;
+			o.Emission = (outline * _OutColor.rgb) + (col.rgb * mask.rgb) + (glowColor * (1 - _BurnLevel)) * _Opacity;
+			//o.Emission = (outline * _OutColor.rgb) + (col.rgb * mask.rgb) + (clamp((_GlowColor.rgb * mask.a * _GlowColor.a + _DamageColor.rgb * _DamageColor.a), fixed3(0,0,0), fixed3(1,1,1)) * (1 - _BurnLevel)) * _Opacity;
             o.Alpha = alpha * _Opacity;
 		}
 		ENDCG

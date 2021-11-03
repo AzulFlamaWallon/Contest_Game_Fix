@@ -71,11 +71,12 @@ public class CharacterController : MonoBehaviour
     public const float ASCENDING_LIMIT = 0.6f;
 
     [Header("아이템 루팅")]
-    [CustomRange(0, 30.0f)] // 어라 생성자 그대로 가버리는데 이거;;
-    public bool  acquireEnabled = false;
+    [CustomRange(0, 20.0f)]
     public float acquireDist = 10.0f;
     public float itemSearchDuration = 1.0f;
     public LayerMask ItemLayer;
+    private Vector3[] hitPos;
+    private Vector3[] dir;
 
     private bool IsHit = false;
 
@@ -91,18 +92,26 @@ public class CharacterController : MonoBehaviour
         InputManager = Manager_Input.Instance;
 
         // 입력 이벤트 등록
-        m_PlayerInputEvts = new UnityAction<User_Profile[]>(When_Player_Input);
-        m_PlayerUpdatePosEvts = new UnityAction<Session_RoundData, User_Profile[]>(When_Player_UpdatePosition);
-        m_PlayerDamageEvts = new UnityAction<ushort, ushort>(Damage);
-        m_PlayerStunEvts = new UnityAction<ushort, ushort>(Stun);
+        RegisterEvents();
         
+        // 아이템 체크 로직
+        StartCoroutine(Update_FieldOnItem());
+
+        // 프로필에 해당하는 툴 등록
+        RegisterTools();
+    }
+
+    void RegisterEvents()
+    {
+        m_PlayerInputEvts     = new UnityAction<User_Profile[]>(When_Player_Input);
+        m_PlayerUpdatePosEvts = new UnityAction<Session_RoundData, User_Profile[]>(When_Player_UpdatePosition);
+        m_PlayerDamageEvts    = new UnityAction<ushort, ushort>(Damage);
+        m_PlayerStunEvts      = new UnityAction<ushort, ushort>(Stun);       
 
         if (Manager_Network.Instance == null)
         {
             // 네트워크 매니저 없음 -> 로컬 디버그 모드
             Manager_Ingame.Instance.e_FakeInput.AddListener(m_PlayerInputEvts);
-
-            StartCoroutine(Update_FieldOnItem());
         }
         else
         {
@@ -111,18 +120,19 @@ public class CharacterController : MonoBehaviour
             Manager_Network.Instance.e_HeartBeat.AddListener(m_PlayerUpdatePosEvts);
             Manager_Network.Instance.e_PlayerHit.AddListener(m_PlayerDamageEvts);
             Manager_Network.Instance.e_PlayerStun.AddListener(m_PlayerStunEvts);
-            
-            StartCoroutine(Update_FieldOnItem());
-        }
+        }  
+        
+        
+    }
 
-        // 프로필에 해당하는 툴 등록
+    void RegisterTools()
+    {
         m_Tools[0] = MakeTool(m_MyProfile.Tool_1);
         m_Tools[1] = MakeTool(m_MyProfile.Tool_2);
         m_Tools[2] = MakeTool(m_MyProfile.Tool_3);
         m_Tools[3] = MakeTool(m_MyProfile.Tool_4);
         ChangeTool(2);
         ChangeTool(1);
-
     }
 
     void OnDestroy()
@@ -370,7 +380,7 @@ public class CharacterController : MonoBehaviour
         }
 
         Vector2 dist = new Vector2(m_Output.Move_X, m_Output.Move_Y);
-        if (dist.magnitude <= 0.1f)
+        if (dist.sqrMagnitude <= 0.1f)
             return;
         Vector3 dir = Calculate_Direction();
         Vector3 movement = dir * moveSpeed * 100f * Time.fixedDeltaTime;
@@ -537,18 +547,16 @@ public class CharacterController : MonoBehaviour
         if (IsMyCharacter())
         {
             Collider[] colliders = Physics.OverlapSphere(m_MyProfile.Current_Pos, acquireDist, ItemLayer.value); // O자형태로, 탐색거리만큼 아이템 콜라이더 취득
+            
             for (int i = 0; i < colliders.Length; i++)
             {
-                Vector3 hitPos = colliders[i].transform.position;
-                Vector3 hitPos_next = colliders[i + 1].transform.position;
+                hitPos[i] = colliders[i].transform.position;
+                dir[i] = (hitPos[i] - m_MyProfile.Current_Pos).normalized;
 
-                Vector3 dir = (hitPos - m_MyProfile.Current_Pos).normalized;
-                Vector3 dir_next = (hitPos_next - m_MyProfile.Current_Pos).normalized;
-
-                if (dir.sqrMagnitude < acquireDist) // 범위안이면
+                if (dir[i].sqrMagnitude < acquireDist) // 범위안이면
                 {                   
                     // 중간 장애물이 없을때
-                    if (Physics.Raycast(m_MyProfile.Current_Pos, dir, out RaycastHit hitinfo, acquireDist, ItemLayer.value))
+                    if (Physics.Raycast(m_MyProfile.Current_Pos, dir[i], out RaycastHit hitinfo, acquireDist, ItemLayer.value))
                     {
                         Debug.Log("와 템 주웠음");
                         Debug.DrawLine(m_MyProfile.Current_Pos, hitinfo.point, Color.red);
@@ -557,7 +565,7 @@ public class CharacterController : MonoBehaviour
                     }
                     else
                     {
-                        Debug.DrawLine(m_MyProfile.Current_Pos, hitPos, Color.blue);
+                        Debug.DrawLine(m_MyProfile.Current_Pos, hitPos[i], Color.blue);
                         IsHit = false;
                     }
                 }

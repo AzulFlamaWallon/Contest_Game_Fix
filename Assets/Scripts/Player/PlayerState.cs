@@ -5,6 +5,10 @@ using MonsterLove.StateMachine;
 
 public class PlayerState : MonoBehaviour
 {
+    /// <summary>
+    /// 플레이어블 캐릭터의 상태 열거형
+    /// 언더바는 몬스터러브 스테이트머신의 구조상 인식에 방해가 되니(이벤트 식별자로 오인함) 언더바를 쓰지 않습니다.
+    /// </summary>
     public enum PlayableCharaState
     {
         PlayerSpawn,
@@ -15,12 +19,13 @@ public class PlayerState : MonoBehaviour
         PlayerOnDeath
     }
 
-    StateMachine<PlayableCharaState> state;
+    public Animator charaAnimator;
+    public StateMachine<PlayableCharaState> state;
 
     private void Awake()
     {
         state = new StateMachine<PlayableCharaState>(this);
-        state.ChangeState(PlayableCharaState.PlayerSpawn);
+        state.ChangeState(PlayableCharaState.PlayerSpawn);        
     }
 
     /*
@@ -28,7 +33,7 @@ public class PlayerState : MonoBehaviour
      */
     public void PlayerSpawn_Enter()
     {
-        state.ChangeState(PlayableCharaState.PlayerSpawn);
+        
     }
 
     public void PlayerSpawn_Update()
