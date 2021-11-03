@@ -547,8 +547,12 @@ public class CharacterController : MonoBehaviour
         if (IsMyCharacter())
         {
             Collider[] colliders = Physics.OverlapSphere(m_MyProfile.Current_Pos, acquireDist, ItemLayer.value); // O자형태로, 탐색거리만큼 아이템 콜라이더 취득
-            
-            for (int i = 0; i < colliders.Length; i++)
+            int col_length = colliders.Length;
+
+            hitPos = new Vector3[col_length];
+            dir    = new Vector3[col_length];
+
+            for (int i = 0; i < col_length; i++)
             {
                 hitPos[i] = colliders[i].transform.position;
                 dir[i] = (hitPos[i] - m_MyProfile.Current_Pos).normalized;
