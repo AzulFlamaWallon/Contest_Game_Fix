@@ -52,16 +52,20 @@ public class ItemManager : SingleToneMonoBehaviour<ItemManager>
 
         maxItem = m_ServerItemDataList.Count;
 
-        StringBuilder strPath = new StringBuilder(m_kItemPath);
-
-        GameObject temp = Resources.Load<GameObject>(strPath.Append("MemoryChip").ToString());
-        if (temp == null)
+        if (itemPrefabList.Count <= maxItem) // 중복 스폰 방지
         {
-            m_Spawner = new SpawnerEx<ItemBase>(new PrefabSpawnFactory<ItemBase>(m_ItemPrefab, m_ItemPrefab.name, _IsAddCompo: true), maxItem);
-        }
-        m_Spawner = new SpawnerEx<ItemBase>(new PrefabSpawnFactory<ItemBase>(temp, temp.name, _IsAddCompo: false), maxItem);
-        ItemBase tempItem = temp.GetComponent<ItemBase>();
-        Spawn(tempItem);
+            StringBuilder strPath = new StringBuilder(m_kItemPath);
+
+            GameObject temp = Resources.Load<GameObject>(strPath.Append("MemoryChip").ToString());
+            if (temp == null)
+            {
+                m_Spawner = new SpawnerEx<ItemBase>(new PrefabSpawnFactory<ItemBase>(m_ItemPrefab, m_ItemPrefab.name, _IsAddCompo: true), maxItem);
+            }
+
+            m_Spawner = new SpawnerEx<ItemBase>(new PrefabSpawnFactory<ItemBase>(temp, temp.name, _IsAddCompo: false), maxItem);
+            ItemBase tempItem = temp.GetComponent<ItemBase>();
+            Spawn(tempItem);
+        }       
     }
 
     public void Spawn()
@@ -83,7 +87,7 @@ public class ItemManager : SingleToneMonoBehaviour<ItemManager>
             _Obj.gameObject.SetActive(true);
             itemPrefabList.Add(_Obj.gameObject);
         }
-        itemPrefabList?.Sort();
+        
     }
 
     public void OnGetItemInstID(int _ItemInstID)
@@ -118,7 +122,6 @@ public class ItemManager : SingleToneMonoBehaviour<ItemManager>
     {
         Destroy(itemPrefabList[_Index].gameObject);
         itemPrefabList.RemoveAt(_Index);
-        itemPrefabList?.Sort();
     }
 }
 
