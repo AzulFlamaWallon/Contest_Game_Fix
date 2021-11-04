@@ -26,7 +26,6 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
     public GameObject prefab_Guard;
     public GameObject prefab_Thief;
     List<GameObject> m_Round_Objects = new List<GameObject>(); // 라운드 끝나면 사라질 것들
-    List<GameObject> m_Item_Objects = new List<GameObject>(); // 아이템들 (멀리 가면 없어짐)
 
     [Header("이벤트")]
     public Event_RoundUpdate e_RoundUpdate = new Event_RoundUpdate();
@@ -41,23 +40,27 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
     {
         if (m_DebugMode)
         {
-            User_Profile up = new User_Profile();
-            up.ID = "1";
-            up.Session_ID = 0;
-            up.Role_Index = 1;
-            up.Current_Pos = new Vector3(2.0f, 2.0f, 0.0f);
-            up.Tool_1 = 5001;
-            up.HP = 2000;
+            User_Profile up = new User_Profile
+            {
+                ID = "1",
+                Session_ID = 0,
+                Role_Index = 1,
+                Current_Pos = new Vector3(2.0f, 2.0f, 0.0f),
+                Tool_1 = 5001,
+                HP = 2000
+            };
             m_Profiles.Add(up);
             m_Client_Profile = up;
 
-            up = new User_Profile();
-            up.ID = "2";
-            up.Session_ID = 1;
-            up.Role_Index = 2;
-            up.Tool_1 = 4001;
-            up.HP = 2000;
-            up.Current_Pos = new Vector3(-2.0f, 2.0f, 0.0f);
+            up = new User_Profile
+            {
+                ID = "2",
+                Session_ID = 1,
+                Role_Index = 2,
+                Tool_1 = 4001,
+                HP = 2000,
+                Current_Pos = new Vector3(-2.0f, 2.0f, 0.0f)
+            };
             m_Profiles.Add(up);
            
 
@@ -235,7 +238,7 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
         Create_PlayerCharacters();
 
         // 아이템 오브젝트
-        Create_Items();
+        ItemManager.Instance.AllocateItemFromServer();
 
         yield return new WaitForSeconds(2.0f);
 
@@ -366,7 +369,6 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
             }
             yield return wfsr;
         }
-        yield return null;
     }
 
     public void Load_Mapdata(int _map, int _round)
@@ -418,57 +420,13 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
 
     public void Get_Items(Item_Data[] _items)
     {
-        m_Items = new List<Item_Data>(_items);
-        Create_Items();
-    }
-    public void Create_Items()
-    {
-        ClearItemObjects();
-
-        int count = m_Items.Count;
-        
-        for (var i = 0; i < count; ++i)
-        {
-            GameObject item_prefab = Resources.Load<GameObject>("Prefabs/Tools/Tool_" + m_Items[i].OID);
-            if (item_prefab == null)
-            {
-                Debug.LogWarning(m_Items[i].OID + "번 아이템 프리팹 없음");
-                continue;
-            }
-            GameObject item_object = Instantiate(item_prefab);
-            item_object.transform.position = m_Items[i].Position;
-            item_object.transform.rotation = Quaternion.Euler(m_Items[i].Rotation);
-            ItemBase item_script = item_object.GetComponentInChildren<ItemBase>();
-            if (item_script == null)
-            {
-                Debug.LogWarning(m_Items[i].OID + "번 아이템 내에 Item 스크립트 없음");
-                continue;
-            }
-            item_script.item.item_data = m_Items[i];
-
-            m_Item_Objects.Add(item_object);
-        }
+        ItemManager.Instance.AllocateItemListFromServer(_items);
+        ItemManager.Instance.AllocateItemFromServer();
     }
 
     public void Player_Get_Item(int _instance_id)
     {
-        int obj_lenth = m_Item_Objects.Count;
-        for(var i = 0; i < obj_lenth; ++i)
-        {
-            // obj 에게서 item_data 빼내기
-            Item_Data itemDat = m_Item_Objects[i].GetComponentInChildren<ItemBase>().item.item_data;
-            // 대조해서 맞으면 오브젝트를 제거
-            if (itemDat.IID == _instance_id)
-            {
-                TooltipManager.Instance.InvokeTooltip(_msg =>
-                {
-                    _msg.ShowMessage(MessageStyle.ON_SCREEN_UP_MSG, "도둑팀 먹은 아이템을 삭제합니다.");
-                }, MessageStyle.ON_SCREEN_UP_MSG);
-
-                Destroy(m_Item_Objects[i].gameObject);
-                m_Item_Objects.RemoveAt(i);                
-            }
-        }        
+        ItemManager.Instance.OnGetItemInstID(_instance_id);
     }
 
     public void Add_Round_Object(GameObject _obj)
@@ -477,17 +435,10 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
     }
     public void Clear_Round_Objects()
     {
-        foreach (GameObject obj in m_Round_Objects)
-            Destroy(obj);
-        m_Round_Objects.Clear();
-    }
-    public void ClearItemObjects()
-    {
-        int obj_lenth = m_Item_Objects.Count;
-        for (var i = 0; i < obj_lenth; ++i)
+        for(int i = 0; i< m_Round_Objects.Count;i++)
         {
-            Destroy(m_Item_Objects[i].gameObject);
+            Destroy(m_Round_Objects[i]);
         }
-        m_Item_Objects.Clear();
+        m_Round_Objects.Clear();
     }
 }

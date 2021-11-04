@@ -1,23 +1,26 @@
 ﻿using UnityEngine;
+using Network.Data;
 
-public class ItemBase : Tool
+public class ItemBase : MonoBehaviour, IResettable
 {
     public ItemInfo item;
 
-    public override void onFire(bool _pressed)
+    public virtual void Init()
     {
-        if (!_pressed)
-            return;
-    }
 
-    public override void onInteract(bool _pressed)
-    {
-        if (!_pressed)
-            return;
     }
-
     public virtual void Init(GameObject _Obj)
     {
 
+    }
+
+    public void SetItemData(Item_Data _ItemData)
+    {
+        item.item_data = _ItemData;
+    }
+
+    public void DeActive()
+    {
+        gameObject.SetActive(false);
     }
 }

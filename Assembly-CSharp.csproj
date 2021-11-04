@@ -143,6 +143,7 @@
     <Compile Include="Assets\Scripts\GUI\ToolTip.cs" />
     <Compile Include="Assets\Scripts\GUI_Menu.cs" />
     <Compile Include="Assets\Scripts\Manager\Ingame_UI.cs" />
+    <Compile Include="Assets\Scripts\Manager\ItemManager.cs" />
     <Compile Include="Assets\Scripts\Manager\Manager_Ingame.cs" />
     <Compile Include="Assets\Scripts\Manager\Manager_Input.cs" />
     <Compile Include="Assets\Scripts\Manager\Manager_Tool.cs" />
@@ -204,6 +205,12 @@
     <Compile Include="Assets\Scripts\Util\SingleTone\SingleTone.cs" />
     <Compile Include="Assets\Scripts\Util\SingleTone\SingleToneComponent.cs" />
     <Compile Include="Assets\Scripts\Util\SingleTone\SingleToneMonoBehaviour.cs" />
+    <Compile Include="Assets\Scripts\Util\Spawner\Factory\IResetTable.cs" />
+    <Compile Include="Assets\Scripts\Util\Spawner\Factory\ISpawnFactory.cs" />
+    <Compile Include="Assets\Scripts\Util\Spawner\Factory\PrefabSpawnFactory.cs" />
+    <Compile Include="Assets\Scripts\Util\Spawner\Factory\SpawnFactoryBase.cs" />
+    <Compile Include="Assets\Scripts\Util\Spawner\Spawner.cs" />
+    <Compile Include="Assets\Scripts\Util\Spawner\SpawnerEx.cs" />
     <Compile Include="Assets\Scripts\Widget_IP_Reminder.cs" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
     <None Include="Assets\JMO Assets\WarFX\Shaders\WFX_S Multiply Soft.shader" />

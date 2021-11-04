@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 public class Weapon : Tool, I_IK_Shotable
 {
     public bool isDrawRay;      //레이를 그릴것인지
-    ushort m_WeaponID;          //무기번호
+    ushort m_WeaponID = 5001;          //무기번호
     [Tooltip("무기 분류 타입")]
     public WeaponCategory WeaponCategory = new WeaponCategory();
     public string wponName;     // 무기명

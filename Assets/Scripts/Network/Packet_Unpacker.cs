@@ -190,7 +190,6 @@ public class Packet_Unpacker
         Debug.Log("버퍼 정보 - " + BitConverter.ToString(_data));
 
         int place = 0;
-        UInt16 strlen = 0;
         place += sizeof(UInt64); // 프로토콜 점프
 
         UInt64 array_length = BitConverter.ToUInt64(_data, place); // 배열 길이 취득
