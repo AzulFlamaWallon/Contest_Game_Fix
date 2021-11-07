@@ -23,6 +23,7 @@ public class ItemManager : SingleToneMonoBehaviour<ItemManager>
     {
         m_ItemPrefab = Resources.Load<GameObject>(m_kMemoryChipItemPath);
         m_strItemPath = new StringBuilder(m_kItemPath);
+        m_FieldItemCount = 0;
     }
 
     public List<Item_Data> GetServerItemList()
@@ -86,6 +87,10 @@ public class ItemManager : SingleToneMonoBehaviour<ItemManager>
                     item_compo.itemData = m_ServerItemDataList[i];
                     itemList.Add(item_compo);
                 }
+            }
+            else if(m_FieldItemCount > _Count)
+            {
+                m_FieldItemCount--;
             }
         }
     }
