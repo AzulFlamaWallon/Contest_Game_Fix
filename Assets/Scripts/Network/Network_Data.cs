@@ -251,7 +251,7 @@ namespace Network.Data
 
     /// <summary> 아이템 정보 </summary>
     [Serializable]
-    public struct Item_Data
+    public struct Item_Data : IEquatable<Item_Data>
     {
         public int IID;
         public int OID;
@@ -282,5 +282,17 @@ namespace Network.Data
             _place += sizeof(float);
             Rotation = new Vector3(x, y, z);
         }
+        public void Init()
+        {
+            IID = 0;
+            OID = 0;
+            Position = Vector3.zero;
+            Rotation = Vector3.zero;
+        }
+        public override bool Equals(object obj) => obj is Item_Data other && Equals(other); 
+        public bool Equals(Item_Data _Target) => base.Equals(_Target);
+        public override int GetHashCode() => this.GetHashCode();
+        public static bool operator ==(Item_Data _A, Item_Data _B) => _A.Equals(_B);
+        public static bool operator !=(Item_Data _A, Item_Data _B) => !(_A ==_B);
     }
 }

@@ -6,7 +6,6 @@ using Network.Data;
 [Serializable]
 public class ItemInfo : ScriptableObject
 {
-    public Item_Data item_data;
     public ushort itemID;
     public ItemType itemType;
     public string itemName;

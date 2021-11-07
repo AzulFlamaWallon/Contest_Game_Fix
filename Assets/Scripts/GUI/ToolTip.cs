@@ -59,20 +59,20 @@ namespace Greyzone.GUI
             gameObject.SetActive(false);
         }
 
-        public void ViewSideInItemMessage(ItemInfo _Item, Vector3 _PlayerPos, float _Dist)
+        public void ViewSideInItemMessage(ItemBase _Item, Vector3 _PlayerPos, float _Dist)
         {
-            Vector3 itemPos = _Item.item_data.Position;
+            Vector3 itemPos = _Item.itemData.Position;
             transform.localPosition = itemPos; // _ItemPos은 로컬포지션으로
 
-            ShowMessage(MessageStyle.ON_HEAD_MSG, _Item.itemName + "을/를 습득하기", _PlayerPos);
+            ShowMessage(MessageStyle.ON_HEAD_MSG, _Item.item.itemName + "을/를 습득하기", _PlayerPos);
 
-            StartCoroutine(UpdateItemMessagePos(_Item, itemPos, _PlayerPos, _Dist));     
+            StartCoroutine(UpdateItemMessagePos(itemPos, _PlayerPos, _Dist));     
         }
 
 
 
         #region 코루틴
-        IEnumerator UpdateItemMessagePos(ItemInfo _Item, Vector3 _ItemPos, Vector3 _PlayerPos, float _Dist)
+        IEnumerator UpdateItemMessagePos(Vector3 _ItemPos, Vector3 _PlayerPos, float _Dist)
         {
             yield return new WaitForSeconds(0.5f);
             while (true)

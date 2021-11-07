@@ -77,8 +77,10 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
         Manager_Network.Instance.e_RoundStart.AddListener(new UnityAction(Start_Round));
         Manager_Network.Instance.e_RoundEnd.AddListener(new UnityAction(End_Round));
         Manager_Network.Instance.e_GameEnd.AddListener(new UnityAction<SESSION_END_REASON>(End_Game));
-        Manager_Network.Instance.e_ItemSpawn.AddListener(new UnityAction<Item_Data[]>(Get_Items));
-        Manager_Network.Instance.e_ItemGet.AddListener(new UnityAction<int>(Player_Get_Item));
+        Manager_Network.Instance.e_ItemSpawn.AddListener(new UnityAction<Item_Data[]>(OnGetItemDataFromServer));
+        Manager_Network.Instance.e_ItemGet.AddListener(new UnityAction<int>(OnGetItemPlayer));
+
+        Resources.UnloadUnusedAssets();
     }
 
     private void FixedUpdate()
@@ -130,7 +132,8 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
     {
         StartCoroutine(Load_Ingame_Process());
     }
-    IEnumerator Load_Ingame_Process()
+
+    IEnumerator Load_Ingame_Process()// 나중에 손보기
     {
         Ingame_UI ui = Ingame_UI.Instance;
         // 로딩창 부르기
@@ -418,13 +421,13 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
         }
     }
 
-    public void Get_Items(Item_Data[] _items)
+    public void OnGetItemDataFromServer(Item_Data[] _items)
     {
         ItemManager.Instance.AllocateItemListFromServer(_items);
         ItemManager.Instance.AllocateItemFromServer();
     }
 
-    public void Player_Get_Item(int _instance_id)
+    public void OnGetItemPlayer(int _instance_id)
     {
         ItemManager.Instance.OnGetItemInstID(_instance_id);
     }

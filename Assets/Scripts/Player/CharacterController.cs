@@ -526,11 +526,11 @@ public class CharacterController : MonoBehaviour
     {
         ItemBase item = FindViewInItem(); // 만약 아이템을 발견했다면 해당 아이템을 가져와서 
         
-        if (item != null && Manager_Network.Instance != null) // 통신이 안끊겼고, 아이템일때
+        if (!ReferenceEquals(item, null) && !ReferenceEquals(Manager_Network.Instance, null)) // 통신이 안끊겼고, 아이템일때
         {
             Debug.Log("아이템명칭 : " + item.item.itemName + "," + "반환받은 객체이름 : " + item.name);
             // TODO : 캐릭터가 발견한 아이템정보를 서버에 보내서, 습득 완료 및 캐릭터에 종속시키는 부분이 들어오면 될거같아요.
-            Packet_Sender.Send_Item_Get(item.item.item_data.IID);
+            Packet_Sender.Send_Item_Get(item.itemData.IID);
             
             TooltipManager.Instance.InvokeTooltip(_msg =>
             {
@@ -551,7 +551,7 @@ public class CharacterController : MonoBehaviour
             int col_length = colliders.Length;
 
             hitPos = new Vector3[col_length];
-            dir = new Vector3[col_length];
+            dir    = new Vector3[col_length];
 
             for (int i = 0; i < col_length; i++)
             {
@@ -560,15 +560,12 @@ public class CharacterController : MonoBehaviour
 
                 if (dir[i].sqrMagnitude < acquireDist) // 범위안이면
                 {
-                    Debug.Log("템 주움::캐릭터위치->히트정보 포인트");
-                    Debug.DrawRay(m_MyProfile.Current_Pos, hitPos[i], Color.red);
-                    Debug.Log("템 주움::캐릭터위치->방향 포인트");
-                    Debug.DrawRay(m_MyProfile.Current_Pos, dir[i], Color.yellow);
-                    Debug.Log("템 주움::방향포인트->히트 포인트");
-                    Debug.DrawRay(dir[i], hitPos[i], Color.blue);
-
                     IsHit = true;
-                    return colliders[i].transform.GetComponentInChildren<ItemBase>();
+                    ItemBase temp = colliders[i].transform.GetComponentInChildren<ItemBase>();
+                    if (temp.itemData.IID > 0)
+                    {
+                        return temp;
+                    }
                 }
                 else
                 {
@@ -626,7 +623,7 @@ public class CharacterController : MonoBehaviour
         {
             TooltipManager.Instance.InvokeTooltip(x =>
             {
-                x.ViewSideInItemMessage(item.item, m_MyProfile.Current_Pos, acquireDist);
+                x.ViewSideInItemMessage(item, m_MyProfile.Current_Pos, acquireDist);
                 x.DrawOnHeadMessage(m_CameraAxis.gameObject);
                 x.ShowMessage(MessageStyle.ON_HEAD_MSG, item.item.itemName + "아이템을 찾음 ㅅㄱ", m_CameraAxis.position);
             }, MessageStyle.ON_HEAD_MSG);
