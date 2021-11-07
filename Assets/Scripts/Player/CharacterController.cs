@@ -8,6 +8,8 @@ using Greyzone.GUI;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
+using System.Linq;
+using Unity.Linq;
 /// <summary>버튼 트리거 이벤트(버튼명, 누름/뗌 여부)</summary>
 public class Event_Button_Triggered : UnityEvent<string, bool> { }
 /// <summary>툴 변경 이벤트(변경한 툴 인덱스)</summary>
@@ -524,8 +526,9 @@ public class CharacterController : MonoBehaviour
     /// </summary>
     public void AcquireItem()
     {
-        ItemBase item = FindViewInItem(); // 만약 아이템을 발견했다면 해당 아이템을 가져와서 
-        
+        //ItemBase item = FindViewInItem(); // 만약 아이템을 발견했다면 해당 아이템을 가져와서 
+        ItemBase item = FindNearestItem();
+
         if (!ReferenceEquals(item, null) && !ReferenceEquals(Manager_Network.Instance, null)) // 통신이 안끊겼고, 아이템일때
         {
             Debug.Log("아이템명칭 : " + item.item.itemName + "," + "반환받은 객체이름 : " + item.name);
@@ -560,6 +563,7 @@ public class CharacterController : MonoBehaviour
 
                 if (dir[i].sqrMagnitude < acquireDist) // 범위안이면
                 {
+                    
                     IsHit = true;
                     ItemBase temp = colliders[i].transform.GetComponentInChildren<ItemBase>();
                     if (temp.itemData.IID > 0)
@@ -573,7 +577,27 @@ public class CharacterController : MonoBehaviour
                 }
             }
         }
+        return null;
+    }
 
+    ItemBase FindNearestItem()
+    {
+        if(IsMyCharacter())
+        {
+            var objs = Physics.OverlapSphere(m_MyProfile.Current_Pos, acquireDist, ItemLayer.value);
+
+            var nearestItem = objs.OrderBy(_items =>
+            {
+                return Vector3.Distance(m_MyProfile.Current_Pos, _items.ClosestPointOnBounds(_items.transform.position));
+            }).FirstOrDefault();
+
+            if(nearestItem.TryGetComponent(out ItemBase _itemBase))
+            {
+                IsHit = true;
+                return _itemBase;
+            }
+            IsHit = false;
+        }
         return null;
     }
 
@@ -643,16 +667,5 @@ public class CharacterController : MonoBehaviour
         Handles.color = IsHit ? Color.cyan : Color.green;
         Handles.DrawSolidDisc(m_MyProfile.Current_Pos, Vector3.up, acquireDist);               
      }
-#endif
-
-#if UNITY_EDITOR
-    private void OnDrawGizmos()
-    {
-        for (int i = 0; i < hitPos.Length; i++)
-        {
-            Handles.color = IsHit ? Color.red : Color.green;
-            Handles.DrawLine(m_MyProfile.Current_Pos, hitPos[i]);
-        }
-    }
 #endif
 }

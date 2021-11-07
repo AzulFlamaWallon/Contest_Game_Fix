@@ -200,6 +200,10 @@
     <Compile Include="Assets\Scripts\Tools\Weapon_Sample.cs" />
     <Compile Include="Assets\Scripts\Util\Attribute\CustomRange.cs" />
     <Compile Include="Assets\Scripts\Util\CustomMath.cs" />
+    <Compile Include="Assets\Scripts\Util\LINQtoGameObject\Examples\SampleSceneScript.cs" />
+    <Compile Include="Assets\Scripts\Util\LINQtoGameObject\Scripts\GameObjectExtensions.Enumerable.cs" />
+    <Compile Include="Assets\Scripts\Util\LINQtoGameObject\Scripts\GameObjectExtensions.Operate.cs" />
+    <Compile Include="Assets\Scripts\Util\LINQtoGameObject\Scripts\GameObjectExtensions.Traverse.cs" />
     <Compile Include="Assets\Scripts\Util\MatShaderModifyr.cs" />
     <Compile Include="Assets\Scripts\Util\SearchChild.cs" />
     <Compile Include="Assets\Scripts\Util\SingleTone\SingleTone.cs" />
@@ -233,6 +237,7 @@
     <None Include="Assets\JMO Assets\WarFX\_Effects (Mobile)\MuzzleFlashes\!MuzzleFlash Differences.txt" />
     <None Include="Assets\Shader\Map_Hologram.shader" />
     <None Include="Assets\JMO Assets\WarFX\Shaders\WFX_S Particle Add A8.shader" />
+    <None Include="Assets\Scripts\Util\LINQtoGameObject\README.txt" />
     <None Include="Assets\JMO Assets\WarFX\Shaders\WFX_S Smoke Scroll.shader" />
     <None Include="Assets\JMO Assets\WarFX\Shaders\WFX_S Particle Multiply A8.shader" />
     <None Include="Assets\MeshBaker\Examples\Shaders\UnlitTextureArrays.shader" />

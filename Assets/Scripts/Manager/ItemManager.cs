@@ -72,10 +72,22 @@ public class ItemManager : SingleToneMonoBehaviour<ItemManager>
         itemList.Capacity = _Count;
         itemList.Clear();
 
+        bool spawn = false;
+
         for (int i = 0; i < _Count; i++)
         {
             m_FieldItemCount++;
             if (m_FieldItemCount <= _Count)
+            {
+                spawn = true;
+            }
+            else if(m_FieldItemCount > _Count)
+            {
+                m_FieldItemCount--;
+                spawn = false;
+            }
+
+            if(spawn)
             {
                 GameObject temp_go = Instantiate(_Temp,
                      m_ServerItemDataList[i].Position,
@@ -87,10 +99,6 @@ public class ItemManager : SingleToneMonoBehaviour<ItemManager>
                     item_compo.itemData = m_ServerItemDataList[i];
                     itemList.Add(item_compo);
                 }
-            }
-            else if(m_FieldItemCount > _Count)
-            {
-                m_FieldItemCount--;
             }
         }
     }
