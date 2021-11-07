@@ -283,7 +283,7 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
     public void End_Round()
     {
         Ingame_UI ui = Ingame_UI.Instance;
-
+        ItemManager.Instance.RemoveDummyItems();
         m_Game_Started = false;
         ui.Lock_Cursor(false);
         Add_Delayed_Coroutine(End_Round_Process());

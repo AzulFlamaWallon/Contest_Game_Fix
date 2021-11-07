@@ -24,6 +24,7 @@ public class ItemManager : SingleToneMonoBehaviour<ItemManager>
         m_ItemPrefab = Resources.Load<GameObject>(m_kMemoryChipItemPath);
         m_strItemPath = new StringBuilder(m_kItemPath);
         m_FieldItemCount = 0;
+        itemList.Clear();
     }
 
     public List<Item_Data> GetServerItemList()
@@ -51,26 +52,23 @@ public class ItemManager : SingleToneMonoBehaviour<ItemManager>
         Spawn(temp, m_ServerItemDataList.Count);
     }
 
-    void RemoveFieldItems(Vector3 _Center)
+    /// <summary>
+    /// 만약 아이템 획득했음에도 불구하고 남아있을시 이녀석을 호출해서 지워줍시다.
+    /// </summary>
+    /// <param name="_Center"></param>
+    public void RemoveDummyItems()
     {
         int item_Count = itemList.Count;
-        Collider[] collders = Physics.OverlapSphere(_Center, removeRange, LayerMask.GetMask("Item"));
-        for (int i = 0; i < collders.Length; i++)
+        for(int i =0; i<item_Count;i++)
         {
-            if (item_Count > 0 && i <= item_Count)
-            {
-                if (collders[i].gameObject.TryGetComponent(out ItemBase _Out))
-                {
-                    if (itemList[i].Equals(_Out)) DestroyItem(i);
-                }
-            }
+            DestroyItem(i);
         }
+        itemList.Clear();
     }
 
     void Spawn(GameObject _Temp, int _Count)
     {
         itemList.Capacity = _Count;
-        itemList.Clear();
 
         bool spawn = false;
 
