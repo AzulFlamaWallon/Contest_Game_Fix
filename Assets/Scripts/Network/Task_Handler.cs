@@ -151,6 +151,23 @@ public class Task_Handler
                 Packet_Unpacker.UnPackPacket(_task.buffer, ref datas);
                 _manager.e_ItemSpawn.Invoke(datas);
             }
+
+            if ((_protocol & (UInt64)PROTOCOL_INGAME.SS_ROUND_RESULT) > 0)
+            {
+                Debug.Log("라운드 결과값");
+                /*
+                 * 추후 구성??????
+                 */
+
+            }
+            if ((_protocol & (UInt64)PROTOCOL_INGAME.END_LOBBY) > 0)
+            {
+                Debug.Log("게임종료. 로비로.");
+                /*
+                 * 패킷은 추후 수정
+                 *  게임 값 넘기는건 님이 하실?
+                 */
+            }
         }
         if ((_protocol & (UInt64)PROTOCOL_INGAME.ITEM) > 0) // 아이템
         {
