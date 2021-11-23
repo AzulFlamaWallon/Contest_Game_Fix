@@ -57,6 +57,8 @@ namespace Network.Data
         SS_ROUND_START  = 0x0000000000000002, // 세션 - 라운드 시작
         SS_ROUND_END    = 0x0000000000000004, // 세션 - 라운드 종료
         SS_ROUND_SPAWN_ITEMS = 0x0000000000000008, // 세션 - 아이템 일괄 스폰
+        SS_ROUND_RESULT = 0x0000000000000010,       //세션 라운드 결과값
+        END_LOBBY   = 0x0000000000000001,           // 라운드 종료 후 최종값
         ITEM_GET        = 0x0000000000000001, // 플레이어의 아이템 획득 사인
         SKILL_QUSTION   = 0x0000000000000001, // 스킬 사용 질의
         SKILL_USE       = 0x0000000000000002, // 스킬 사용
