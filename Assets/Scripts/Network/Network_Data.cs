@@ -289,10 +289,37 @@ namespace Network.Data
             Position = Vector3.zero;
             Rotation = Vector3.zero;
         }
-        public override bool Equals(object obj) => obj is Item_Data other && Equals(other); 
+        public override bool Equals(object obj) => obj is Item_Data other && Equals(other);
         public bool Equals(Item_Data _Target) => base.Equals(_Target);
         public override int GetHashCode() => this.GetHashCode();
         public static bool operator ==(Item_Data _A, Item_Data _B) => _A.Equals(_B);
-        public static bool operator !=(Item_Data _A, Item_Data _B) => !(_A ==_B);
+        public static bool operator !=(Item_Data _A, Item_Data _B) => !(_A == _B);
     }
+
+    [Serializable]
+    public struct Profile_RoundResult
+    {
+        public UInt16 Current_Round;  // 현재 라운드
+        public UInt64 Time_Up;     // 생존/소탕시간		//라운드 종료시에 계산?
+        public bool Result_flag;       //승패여부
+        public UInt16 Shoot_Count; //  스턴/총쏜 횟수
+        public UInt16 Getting_Count;       // 아템 먹은 횟수 / 잡은 로그 수
+        public UInt64 averageRoundTime;
+        public UInt64 minTime;         //최소-가드 / 최장-로그
+        public UInt32 Result_Count;    // 재경기 카운트 수
+
+        public void Init()
+        {
+            Current_Round = 0;
+            Time_Up = 0;
+            Result_flag = false;
+            Shoot_Count = 0;
+            Getting_Count = 0;
+            averageRoundTime = 0;
+            minTime = 0;
+            Result_Count = 0;
+
+        }
+    }
+
 }
