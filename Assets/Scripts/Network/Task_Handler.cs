@@ -160,7 +160,10 @@ public class Task_Handler
                  * 우선 여기에 패킷을 풀고
                  * 이 아래서 화면으로 넘어가는 로직으로 생각 중임.(데이터도 여기서 넘길예정)
                  */
-                //
+                Profile_RoundResult result = new Profile_RoundResult();
+                result.Init();
+                Packet_Unpacker.UnPackPacket(_task.buffer, ref result);
+                _manager.e_GameReuslt.Invoke(result);
 
             }
             if ((_protocol & (UInt64)PROTOCOL_INGAME.END_LOBBY) > 0)

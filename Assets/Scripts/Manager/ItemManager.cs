@@ -121,11 +121,6 @@ public class ItemManager : SingleToneMonoBehaviour<ItemManager>
         }
     }
 
-    public void ClearItem(int _Index)
-    {
-        itemList[_Index].GetComponent<ItemBase>().DeActive();
-    }
-
     public void DestroyItem(int _Index)
     {
         Destroy(itemList[_Index].gameObject);

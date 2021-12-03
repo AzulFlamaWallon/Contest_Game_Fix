@@ -1,61 +1,32 @@
 ﻿using System;
 using UnityEngine;
+using System.Collections.Generic;
 using UnityEngine.Animations;
 using MonsterLove.StateMachine;
+using System.Collections;
 
 public class PlayerState : MonoBehaviour
 {
-    /// <summary>
-    /// 플레이어블 캐릭터의 상태 열거형
-    /// 언더바는 몬스터러브 스테이트머신의 구조상 인식에 방해가 되니(이벤트 식별자로 오인함) 언더바를 쓰지 않습니다.
-    /// </summary>
-    public enum PlayableCharaState
-    {
-        PlayerSpawn,
-        PlayerIdle,
-        PlayerMove,
-        PlayerOnHit,
-        PlayerOnStun,
-        PlayerOnDeath
-    }
-
     public Animator charaAnimator;
     public StateMachine<PlayableCharaState> state;
 
-    private void Awake()
+    void Awake()
     {
         state = new StateMachine<PlayableCharaState>(this);
-        state.ChangeState(PlayableCharaState.PlayerSpawn);        
+        state.ChangeState(PlayableCharaState.PlayerIdle);        
     }
 
-    /*
-     * PLAYER_Spawn
-     */
-    public void PlayerSpawn_Enter()
-    {
-        
-    }
-
-    public void PlayerSpawn_Update()
-    {
-
-    }
-
-    public void PlayerSpawn_Exit()
-    {
-        
-    }
     /*
     * PLAYER_IDLE
     */
     public void PlayerIdle_Enter()
     {
-        state.ChangeState(PlayableCharaState.PlayerIdle);
+        charaAnimator.SetBool("Idle", true);
     }
 
     public void PlayerIdle_Update()
     {
-
+ 
     }
 
     public void PlayerIdle_Exit()
@@ -77,7 +48,7 @@ public class PlayerState : MonoBehaviour
 
     public void PlayerMove_Exit()
     {
-
+        state.ChangeState(PlayableCharaState.PlayerIdle);
     }
 
     /*
@@ -95,24 +66,24 @@ public class PlayerState : MonoBehaviour
 
     public void PlayerOnHit_Exit()
     {
-
+        state.ChangeState(PlayableCharaState.PlayerIdle);
     }
     /*
     * PLAYER_ONSTUN
     */
     public void PlayerOnStun_Enter()
     {
-        state.ChangeState(PlayableCharaState.PlayerOnStun);
+        charaAnimator.SetTrigger("Stun");
     }
 
     public void PlayerOnStun_Update()
     {
-
+        
     }
 
     public void PlayerOnStun_Exit()
     {
-
+        state.ChangeState(PlayableCharaState.PlayerIdle);
     }
 
     /*
@@ -120,7 +91,7 @@ public class PlayerState : MonoBehaviour
     */
     public void PlayerOnDeath_Enter()
     {
-        state.ChangeState(PlayableCharaState.PlayerOnDeath);
+        
     }
 
     public void PlayerOnDeath_Update()
@@ -129,6 +100,24 @@ public class PlayerState : MonoBehaviour
     }
 
     public void PlayerOnDeath_Exit()
+    {
+
+    }
+
+    /*
+   * PlayerOnCloaking
+   */
+    public void PlayerOnCloaking_Enter()
+    {
+
+    }
+
+    public void PlayerOnCloaking_Update()
+    {
+
+    }
+
+    public void PlayerOnCloaking_Exit()
     {
 
     }

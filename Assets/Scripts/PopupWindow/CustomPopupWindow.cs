@@ -14,21 +14,6 @@ public enum PopupTitleCategory
 }
 
 /// <summary>
-/// 버튼결과
-/// </summary>
-public enum PopUpResult
-{
-    None,
-    OK,
-    Cancel,
-    Abort,
-    Retry,
-    Ignore,
-    Yes,
-    No
-}
-
-/// <summary>
 /// 팝업윈도우
 /// </summary>
 public class CustomPopupWindow : SingleToneMonoBehaviour<CustomPopupWindow>

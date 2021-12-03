@@ -29,27 +29,28 @@ public class Manager_Network : MonoBehaviour
     // 이벤트
 
     // global
-    public Event_Disconnected e_Disconnected = new Event_Disconnected(); // 연결 끊어짐
-    public Protocol_Recv_Event e_ProtocolRecv = new Protocol_Recv_Event(); // 프로토콜 겟또다제 
+    public Event_Disconnected    e_Disconnected = new Event_Disconnected(); // 연결 끊어짐
+    public Protocol_Recv_Event   e_ProtocolRecv = new Protocol_Recv_Event(); // 프로토콜 겟또다제 
 
     // login
-    public Event_Login_Result e_LoginResult = new Event_Login_Result(); // 로그인 시도 시 결과값
+    public Event_Login_Result    e_LoginResult = new Event_Login_Result(); // 로그인 시도 시 결과값
     public Event_Register_Result e_RegisterResult = new Event_Register_Result(); // 회원가입 시도 시 결과값
-    public Event_Match_Stopped e_Match_Stopped = new Event_Match_Stopped();
-    public Event_Matched e_Matched = new Event_Matched();
+    public Event_Match_Stopped   e_Match_Stopped = new Event_Match_Stopped();
+    public Event_Matched         e_Matched = new Event_Matched();
 
     // ingame
-    public Event_HeartBeat e_HeartBeat = new Event_HeartBeat();
-    public Event_Round_Ready e_RoundReady = new Event_Round_Ready();
-    public Event_Round_Start e_RoundStart = new Event_Round_Start();
-    public Event_Round_End e_RoundEnd = new Event_Round_End();
-    public Event_Game_Start e_GameStart = new Event_Game_Start();
-    public Event_Game_End e_GameEnd = new Event_Game_End();
-    public Event_Player_Input e_PlayerInput = new Event_Player_Input();
-    public Event_Player_Hit e_PlayerHit = new Event_Player_Hit();
-    public Event_Player_Stun e_PlayerStun = new Event_Player_Stun();
-    public Event_Item_Spawn e_ItemSpawn = new Event_Item_Spawn();
-    public Event_Item_Get e_ItemGet = new Event_Item_Get();
+    public Event_HeartBeat       e_HeartBeat = new Event_HeartBeat();
+    public Event_Round_Ready     e_RoundReady = new Event_Round_Ready();
+    public Event_Round_Start     e_RoundStart = new Event_Round_Start();
+    public Event_Round_End       e_RoundEnd = new Event_Round_End();
+    public Event_Game_Start      e_GameStart = new Event_Game_Start();
+    public Event_Game_End        e_GameEnd = new Event_Game_End();
+    public Event_Player_Input    e_PlayerInput = new Event_Player_Input();
+    public Event_Player_Hit      e_PlayerHit = new Event_Player_Hit();
+    public Event_Player_Stun     e_PlayerStun = new Event_Player_Stun();
+    public Event_Item_Spawn      e_ItemSpawn = new Event_Item_Spawn();
+    public Event_Item_Get        e_ItemGet = new Event_Item_Get();
+    public Event_Get_GameResult  e_GameReuslt = new Event_Get_GameResult();
 
     public static bool Debug_Toggle = false; // 디버그 로거 표현 여부
     public static void Log(string _msg) // 로그 쓰기
@@ -302,16 +303,16 @@ public class Manager_Packet
             {              
                 PacketSend(task);
 
-                Manager_Network.Log("Sended - " + task.buffer[0] + "/" + task.buffer[1] + "/" + task.buffer[2] + "/" + task.buffer[3]);
+               // Manager_Network.Log("Sended - " + task.buffer[0] + "/" + task.buffer[1] + "/" + task.buffer[2] + "/" + task.buffer[3]);
                 total_packets++;
             }
         }
         catch (Exception)
         {
-            Manager_Network.Log("send error.");
+            //Manager_Network.Log("send error.");
             m_NetworkManager.e_Disconnected.Invoke();
         }
-        Manager_Network.Log("A total of " + total_packets + " packets sent");
+       // Manager_Network.Log("A total of " + total_packets + " packets sent");
     }
 
     #endregion
@@ -327,7 +328,7 @@ public class Manager_Packet
 
         int recv = ns.Read(size, 0, 4);
         _size = BitConverter.ToInt16(size, 0);
-        Manager_Network.Log("target size = " + _size);
+        //Manager_Network.Log("target size = " + _size);
 
         recv = ns.Read(_buf, 0, _size);
     }
@@ -339,7 +340,7 @@ public class Manager_Packet
         {
             while (m_RecvQueue.TryDequeue(out Task task))
             {
-                Manager_Network.Log("Received...");
+                //Manager_Network.Log("Received...");
                 m_Task_Handler.Perform_Task(m_NetworkManager, task); // 받은 패킷과 프로토콜을 전달, 인게임 요소들에 반영
             }
         }

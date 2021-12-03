@@ -127,6 +127,8 @@
     <Compile Include="Assets\Scripts\Ability\TestAbility.cs" />
     <Compile Include="Assets\Scripts\CameraActionSignal\DeathCam.cs" />
     <Compile Include="Assets\Scripts\CameraActionSignal\SlowMotion.cs" />
+    <Compile Include="Assets\Scripts\CombatResult\ResultScreen.cs" />
+    <Compile Include="Assets\Scripts\CombatResult\RoundResult.cs" />
     <Compile Include="Assets\Scripts\Foot_Sound.cs" />
     <Compile Include="Assets\Scripts\GUI\GUI_Element_Profile.cs" />
     <Compile Include="Assets\Scripts\GUI\GUI_Scoreboard.cs" />
@@ -147,7 +149,6 @@
     <Compile Include="Assets\Scripts\Manager\Manager_Ingame.cs" />
     <Compile Include="Assets\Scripts\Manager\Manager_Input.cs" />
     <Compile Include="Assets\Scripts\Manager\Manager_Tool.cs" />
-    <Compile Include="Assets\Scripts\Manager\SoundManager.cs" />
     <Compile Include="Assets\Scripts\Manager\TooltipManager.cs" />
     <Compile Include="Assets\Scripts\Master.cs" />
     <Compile Include="Assets\Scripts\Minimap.cs" />
@@ -163,11 +164,16 @@
     <Compile Include="Assets\Scripts\Network\Task_Handler.cs" />
     <Compile Include="Assets\Scripts\Player\CharacterAnimator.cs" />
     <Compile Include="Assets\Scripts\Player\CharacterController.cs" />
+    <Compile Include="Assets\Scripts\Player\GuardState.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayableCharaState.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerCameraActionManager.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerInputAction.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerState.cs" />
     <Compile Include="Assets\Scripts\PopupWindow\CustomPopupWindow.cs" />
     <Compile Include="Assets\Scripts\PopupWindow\Match_Window.cs" />
+    <Compile Include="Assets\Scripts\PopupWindow\PanelPopupBase.cs" />
+    <Compile Include="Assets\Scripts\PopupWindow\PopupManager.cs" />
+    <Compile Include="Assets\Scripts\PopupWindow\PopupWindowBase.cs" />
     <Compile Include="Assets\Scripts\PopupWindow\Small_Window.cs" />
     <Compile Include="Assets\Scripts\PopupWindow\TestCall.cs" />
     <Compile Include="Assets\Scripts\TestScene\DebugLogger.cs" />
@@ -200,6 +206,9 @@
     <Compile Include="Assets\Scripts\Tools\Weapon_Sample.cs" />
     <Compile Include="Assets\Scripts\Util\Attribute\CustomRange.cs" />
     <Compile Include="Assets\Scripts\Util\CustomMath.cs" />
+    <Compile Include="Assets\Scripts\Util\Hellmade\Eazy Sound Manager\Demo\Scripts\EazySoundManagerDemo.cs" />
+    <Compile Include="Assets\Scripts\Util\Hellmade\Eazy Sound Manager\Scripts\Audio.cs" />
+    <Compile Include="Assets\Scripts\Util\Hellmade\Eazy Sound Manager\Scripts\EazySoundManager.cs" />
     <Compile Include="Assets\Scripts\Util\LINQtoGameObject\Examples\SampleSceneScript.cs" />
     <Compile Include="Assets\Scripts\Util\LINQtoGameObject\Scripts\GameObjectExtensions.Enumerable.cs" />
     <Compile Include="Assets\Scripts\Util\LINQtoGameObject\Scripts\GameObjectExtensions.Operate.cs" />

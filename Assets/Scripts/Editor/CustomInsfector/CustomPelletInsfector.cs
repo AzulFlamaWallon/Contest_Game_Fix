@@ -31,34 +31,4 @@ public class CustomPelletInsfector : Editor
             EditorUtility.SetDirty(target);
         }
     }
-
-    void DrawScript()
-    {
-        MonoScript script = null;
-        script = EditorGUILayout.ObjectField(script, typeof(MonoScript), false) as MonoScript;
-    }
-
-    void DrawProperty(string _PropName)
-    {
-        serializedObject.Update();
-        SerializedProperty prop = serializedObject.FindProperty(_PropName);
-        EditorGUILayout.PropertyField(prop, true, new GUILayoutOption[0]);
-        serializedObject.ApplyModifiedProperties();
-    }
-
-    /// <summary>
-    /// 해당 변수를 원래의 Public 형태로 사용하게 만들어줍니다.
-    /// </summary>
-    /// <param name="_PropName">대상 변수이름</param>
-    void UseProperty(string _PropName)
-    {
-        SerializedProperty prop = serializedObject.FindProperty(_PropName);
-        EditorGUI.BeginChangeCheck(); //값이 바뀌는지 검사시작
-        EditorGUILayout.PropertyField(prop, true); // 배열까지 싸그리 필드생성되게끔
-
-        if (EditorGUI.EndChangeCheck()) //만약 검사가 끝날무렵 필드에 변화가 생겼다면
-        {
-            serializedObject.ApplyModifiedProperties(); // 원래 변수에 값 적용
-        }
-    }
 }

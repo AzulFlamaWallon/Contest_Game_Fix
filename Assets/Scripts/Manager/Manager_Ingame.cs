@@ -79,6 +79,7 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
         Manager_Network.Instance.e_GameEnd.AddListener(new UnityAction<SESSION_END_REASON>(End_Game));
         Manager_Network.Instance.e_ItemSpawn.AddListener(new UnityAction<Item_Data[]>(OnGetItemDataFromServer));
         Manager_Network.Instance.e_ItemGet.AddListener(new UnityAction<int>(OnGetItemPlayer));
+        Manager_Network.Instance.e_GameReuslt.AddListener(new UnityAction<Profile_RoundResult>(OnGetGameResultFromServer));
 
         Resources.UnloadUnusedAssets();
     }
@@ -240,9 +241,6 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
         Manager_Network.Log("캐릭터 생성");
         Create_PlayerCharacters();
 
-        // 아이템 오브젝트
-        ItemManager.Instance.AllocateItemFromServer();
-
         yield return new WaitForSeconds(2.0f);
 
         if (m_DebugMode)
@@ -309,13 +307,26 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
         switch (_reason)
         {
             case SESSION_END_REASON.CRITICAL_ERROR:
-                CustomPopupWindow.Show("에러", "세션간 크리티컬 에러가 발생했어요.");
-                Quit_Game();
+                PopupManager.InvokePopup().Ok("나가기", _ => Quit_Game()).Show("에러", "세션간 크리티컬 에러가 발생했어요.");
+                break;
+            case SESSION_END_REASON.NORMALLY_END:
+                // 어..
+                break;
+            case SESSION_END_REASON.NOT_ENDED:
+                break;
+            case SESSION_END_REASON.USER_TOO_SHORT:
+                PopupManager.InvokePopup().Ok("나가기", _ => Quit_Game()).Show("에러", "게임을 이어가기엔 유저가 너무 적습니다.");
                 break;
             default:
                 Add_Delayed_Coroutine(End_Game_Process());
                 break;
         }
+    }
+
+    public void OnGetGameResultFromServer(Profile_RoundResult _Result)
+    {
+        RoundResult result = new RoundResult();
+        result.GetResultDataFromServer(_Result);
     }
 
     IEnumerator End_Game_Process()

@@ -76,6 +76,7 @@
     <Compile Include="Assets\Scripts\Editor\CustomInsfector\CustomCharacterControllerInsfector.cs" />
     <Compile Include="Assets\Scripts\Editor\CustomInsfector\CustomPelletInsfector.cs" />
     <Compile Include="Assets\Scripts\Editor\CustomInsfector\CustomWeaponInsfector.cs" />
+    <Compile Include="Assets\Scripts\Editor\CustomInsfector\InsfectorUI\CustomEditorProperty.cs" />
     <Compile Include="Assets\Scripts\Editor\CustomInsfector\InsfectorUI\UILayout.cs" />
     <Compile Include="Assets\Scripts\Editor\External_Util\SerializedPropertyExtensions.cs" />
     <Compile Include="Assets\Scripts\Editor\Version\VersionManager.cs" />

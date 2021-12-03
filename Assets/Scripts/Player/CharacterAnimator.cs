@@ -143,25 +143,10 @@ public class CharacterAnimator : MonoBehaviour
         {
             m_LiveModel.SetActive(false);
             GameObject eff = Instantiate(prefab_DeadEffect);
-            eff.transform.position = transform.position;
-            DeathCam deathCam = new DeathCam();
-            deathCam.InvokeDeathCamera(GetAnimatedGuardAction(eff.transform), eff.transform);
             Manager_Ingame.Instance.Add_Round_Object(eff);
         }
     }
 
-    Transform GetAnimatedGuardAction(Transform _Target)
-    {
-         Collider[] colliders = Physics.OverlapSphere(_Target.position, float.PositiveInfinity, playerLayer.value);
-         foreach (var collider in colliders)
-         {
-             if (collider.gameObject.GetComponent<CharacterController>().IsGuard())
-             {
-                 return collider.transform;
-             }
-         }
-        return m_CamAxis.transform;
-    }
 
     /// <summary>
     /// 스턴 당했을 때의 애니메이션 처리

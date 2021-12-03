@@ -95,7 +95,7 @@ public class Scene_Title : MonoBehaviour
         // ID와 PW 안 적거나 짧은 경우를 처리
         if (m_login_id.text.Length < 3 || m_login_pw.text.Length < 3)
         {
-            CustomPopupWindow.Show("error", "ID, 암호는 최소 3글자 이상이어야 합니다.");
+            PopupManager.InvokePopup().Show("error", "ID, 암호는 최소 3글자 이상이어야 합니다.");
             return;
         }
 
@@ -118,17 +118,28 @@ public class Scene_Title : MonoBehaviour
         // ID와 PW, 닉네임 안 적거나 짧은 경우를 처리
         if (m_register_id.text.Length < 3 || m_register_pw.text.Length < 3 || m_register_nickname.text.Length < 3)
         {
-            CustomPopupWindow.Show("error", "ID, 암호, 닉네임은 최소 3글자 이상이어야 합니다.");
+            PopupManager.InvokePopup().Show("error", "ID, 암호, 닉네임은 최소 3글자 이상이어야 합니다.");
             return;
         }
-
-        Manager_Network.Instance.Register(m_register_id.text, m_register_pw.text, m_register_nickname.text);
+        if(Manager_Network.Instance.Connected)
+        {
+            Manager_Network.Instance.Register(m_register_id.text, m_register_pw.text, m_register_nickname.text);         
+        }
+        else
+        {
+            PopupManager.InvokePopup().Title("회원가입 에러").Ok("나가기", _ =>
+            {
+                _ = PopUpResult.Cancel;
+                Application.Quit();                
+            }).Show("서버에 연결이 되지않아 게임을 종료합니다.");
+        }
+        
     }
     void When_Get_Register_Result(bool _result)
     {
         if (_result)
-            CustomPopupWindow.Show("notice", "회원가입에 성공했습니다.");
+            PopupManager.InvokePopup().Show("notice", "회원가입에 성공했습니다.");
         else
-            CustomPopupWindow.Show("notice", "회원가입에 실패했습니다.\n다른 ID를 사용해보십시오.");
+            PopupManager.InvokePopup().Show("notice", "회원가입에 실패했습니다.\n다른 ID를 사용해보십시오.");
     }
 }

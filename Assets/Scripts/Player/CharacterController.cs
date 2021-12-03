@@ -82,9 +82,12 @@ public class CharacterController : MonoBehaviour
 
     private bool IsHit = false;
 
+    public PlayableCharaState charastate;
     public PlayerState playerState;
+    private Rigidbody m_Rigidbody;
+    private CapsuleCollider m_CapsuleCollider;
 
-    Renderer[] m_Renderers;
+   Renderer[] m_Renderers;
 
     IEnumerator Start()
     {
@@ -101,6 +104,7 @@ public class CharacterController : MonoBehaviour
 
         // 프로필에 해당하는 툴 등록
         RegisterTools();
+
     }
 
     void RegisterEvents()
@@ -135,6 +139,12 @@ public class CharacterController : MonoBehaviour
         m_Tools[3] = MakeTool(m_MyProfile.Tool_4);
         ChangeTool(2);
         ChangeTool(1);
+    }
+
+    private void Initialize()
+    {
+        m_Rigidbody = GetComponent<Rigidbody>();
+        m_CapsuleCollider = GetComponentInChildren<CapsuleCollider>();
     }
 
     void OnDestroy()
@@ -289,14 +299,6 @@ public class CharacterController : MonoBehaviour
 
     public bool IsGuard()
     {
-#if UNITY_2020_2_NEWER
-        return m_MyProfile.Role_Index switch
-        {
-            1 => false,
-            2 => true,
-            _ => false,
-        };
-#else
         switch (m_MyProfile.Role_Index)
         {
             case 1:
@@ -306,7 +308,6 @@ public class CharacterController : MonoBehaviour
             default:
                 return false;
         }
-#endif
     }
 
     public bool IsAlive()
@@ -364,21 +365,22 @@ public class CharacterController : MonoBehaviour
 
     void Move()
     {
+        playerState.state.ChangeState(PlayableCharaState.PlayerMove);
         if (m_Is_Stunned)
         {
-            Vector3 vec = new Vector3(0f, GetComponent<Rigidbody>().velocity.y, 0f);
-            GetComponent<Rigidbody>().velocity = vec;
+            Vector3 vec = new Vector3(0f, m_Rigidbody.velocity.y, 0f);
+            m_Rigidbody.velocity = vec;
             return;
         }
 
         // 만약에 이동하지 않을때
         if (m_Output.Move_X == 0 && m_Output.Move_Y == 0)
         {
-            GetComponentInChildren<CapsuleCollider>().sharedMaterial = fullFriction;
+            m_CapsuleCollider.sharedMaterial = fullFriction;
         }
         else // 이동중일때
         {
-            GetComponentInChildren<CapsuleCollider>().sharedMaterial = noFriction;
+            m_CapsuleCollider.sharedMaterial = noFriction;
         }
 
         Vector2 dist = new Vector2(m_Output.Move_X, m_Output.Move_Y);
@@ -387,8 +389,8 @@ public class CharacterController : MonoBehaviour
         Vector3 dir = Calculate_Direction();
         Vector3 movement = dir * moveSpeed * 100f * Time.fixedDeltaTime;
 
-        Vector3 vector3 = new Vector3(movement.x, GetComponent<Rigidbody>().velocity.y, movement.z);
-        GetComponent<Rigidbody>().velocity = vector3;
+        Vector3 vector3 = new Vector3(movement.x, m_Rigidbody.velocity.y, movement.z);
+        m_Rigidbody.velocity = vector3;
     }
 
     /// <summary>
@@ -400,40 +402,32 @@ public class CharacterController : MonoBehaviour
         if (m_Output.Move_X.Equals(0.0f) && m_Output.Move_Y.Equals(0.0f))
             return transform.position;
 
-        // 캐릭터 콜라이더 취득
-        //CapsuleCollider collider = gameObject.GetComponent<CapsuleCollider>();
-        // TODO : 모델을 따라가는 콜라이더를 취득.
-        CapsuleCollider collider = gameObject.GetComponentInChildren<CapsuleCollider>();
-
         // 방향 계산
         Vector3 dir = Calculate_Direction();
         // 예측해야하는 거리 계산
         float dist = moveSpeed * Manager_Ingame.Instance.m_Input_Update_Interval;
-        // float dist = collider.radius + moveSpeed * Manager_Ingame.Instance.m_Input_Update_Interval;
 
         // 충돌 체크 시작
         // Physics.CapsuleCast  ==> 원래 해야하는 충돌체크
-        Ray ray = new Ray(transform.position + new Vector3(0f, ASCENDING_LIMIT, 0f) + dir * collider.radius, dir);
-        RaycastHit hit;
+        Ray ray = new Ray(transform.position + new Vector3(0f, ASCENDING_LIMIT, 0f) + dir * m_CapsuleCollider.radius, dir);
         Vector3 final_pos;
         int mask = LayerMask.NameToLayer("Player");
 
-        if (Physics.Raycast(ray, out hit, dist, ~mask))
+        if (Physics.Raycast(ray, out RaycastHit hit, dist, ~mask))
         {
             Vector3 hitpos = hit.point; // 충돌 좌표를 저장
-            // Debug.Log("충돌된 좌표 : " + hitpos + " 충돌 오브젝트 타입 : " + hit.collider.ToString());
             m_MyProfile.Current_Pos = hitpos;
             final_pos = hitpos;
         }
         else
             final_pos = ray.GetPoint(dist); // 부딪힌 거 없으면 적당히 나아가기만 하기
-        final_pos -= dir * collider.radius;
+        final_pos -= dir * m_CapsuleCollider.radius;
 
         // 충돌 체크 시작 (아랫 방향)
         ray = new Ray(final_pos + new Vector3(0f, ASCENDING_LIMIT, 0f), new Vector3(0f, -1f, 0f));
-        if (Physics.Raycast(ray, out hit, ASCENDING_LIMIT * 2f, ~mask))
+        if (Physics.Raycast(ray, out RaycastHit _hit, ASCENDING_LIMIT * 2f, ~mask))
         {
-            final_pos = hit.point;
+            final_pos = _hit.point;
         }
         return final_pos;
     }
@@ -494,16 +488,15 @@ public class CharacterController : MonoBehaviour
         Debug.Log(m_MyProfile.Session_ID + "==" + _id + "에게 " + (_tick / 1000f) + "초 스턴");
         if (m_MyProfile.Session_ID != _id)
             return;
-
+        playerState.state.ChangeState(PlayableCharaState.PlayerOnStun);
         StartCoroutine(Stun_Process(_tick));
         e_Stunned.Invoke(_tick);
     }
     IEnumerator Stun_Process(UInt16 _tick)
     {
-        m_Is_Stunned = true;
         yield return new WaitForSecondsRealtime(_tick / 1000.0f);
 
-        m_Is_Stunned = false;
+        playerState.state.ChangeState(PlayableCharaState.PlayerIdle);
         yield return null;
     }
     /// <summary>
@@ -527,9 +520,9 @@ public class CharacterController : MonoBehaviour
     public void AcquireItem()
     {
         //ItemBase item = FindViewInItem(); // 만약 아이템을 발견했다면 해당 아이템을 가져와서 
-        ItemBase item = FindNearestItem();
+        //ItemBase item = FindNearestItem();
 
-        if (!ReferenceEquals(item, null) && !ReferenceEquals(Manager_Network.Instance, null)) // 통신이 안끊겼고, 아이템일때
+        if (!ReferenceEquals(Manager_Network.Instance, null) && TryFindNearestItem(out ItemBase item)) // 통신이 안끊겼고, 아이템일때
         {
             Debug.Log("아이템명칭 : " + item.item.itemName + "," + "반환받은 객체이름 : " + item.name);
             // TODO : 캐릭터가 발견한 아이템정보를 서버에 보내서, 습득 완료 및 캐릭터에 종속시키는 부분이 들어오면 될거같아요.
@@ -540,44 +533,6 @@ public class CharacterController : MonoBehaviour
                 _msg.ShowMessage(MessageStyle.ON_SCREEN_UP_MSG, "도둑팀이 " + item.item.itemName + "을/를 습득했습니다.");
             }, MessageStyle.ON_SCREEN_UP_MSG);
         }
-    }
- 
-    /// <summary>
-    /// 아이템을 탐색합니다.
-    /// </summary>
-    /// <returns></returns>
-    ItemBase FindViewInItem()
-    {
-        if (IsMyCharacter())
-        {
-            Collider[] colliders = Physics.OverlapSphere(m_MyProfile.Current_Pos, acquireDist, ItemLayer.value); // O자형태로, 탐색거리만큼 아이템 콜라이더 취득
-            int col_length = colliders.Length;
-
-            hitPos = new Vector3[col_length];
-            dir    = new Vector3[col_length];
-
-            for (int i = 0; i < col_length; i++)
-            {
-                hitPos[i] = colliders[i].transform.position;
-                dir[i] = (hitPos[i] - m_MyProfile.Current_Pos).normalized;
-
-                if (dir[i].sqrMagnitude < acquireDist) // 범위안이면
-                {
-                    
-                    IsHit = true;
-                    ItemBase temp = colliders[i].transform.GetComponentInChildren<ItemBase>();
-                    if (temp.itemData.IID > 0)
-                    {
-                        return temp;
-                    }
-                }
-                else
-                {
-                    IsHit = false;
-                }
-            }
-        }
-        return null;
     }
 
     ItemBase FindNearestItem()
@@ -601,62 +556,45 @@ public class CharacterController : MonoBehaviour
         return null;
     }
 
-    ItemBase FindViewInNoPressItem()
+    bool TryFindNearestItem(out ItemBase _item)
     {
         if (IsMyCharacter())
         {
-            Collider[] colliders = Physics.OverlapSphere(m_MyProfile.Current_Pos, acquireDist, ItemLayer.value); // O자형태로, 탐색거리만큼 아이템 콜라이더 취득
-            int col_length = colliders.Length;
+            var objs = Physics.OverlapSphere(m_MyProfile.Current_Pos, acquireDist, ItemLayer.value);
 
-            hitPos = new Vector3[col_length];
-            dir    = new Vector3[col_length];
-
-            for (int i = 0; i < col_length; i++)
+            var nearestItem = objs.OrderBy(_items =>
             {
-                hitPos[i] = colliders[i].transform.position;
-                dir[i] = (hitPos[i] - m_MyProfile.Current_Pos).normalized;
+                return Vector3.Distance(m_MyProfile.Current_Pos, _items.ClosestPointOnBounds(_items.transform.position));
+            }).FirstOrDefault();
 
-                if (dir[i].sqrMagnitude < acquireDist) // 범위안이면
-                {                   
-                    // 중간 장애물이 없을때
-                    if (Physics.Raycast(m_MyProfile.Current_Pos, dir[i], out RaycastHit hitinfo, acquireDist, ItemLayer.value))
-                    {
-                        /*Debug.Log("템 주움::캐릭터위치->히트정보 포인트");
-                        Debug.DrawRay(m_MyProfile.Current_Pos, hitinfo.point, Color.red);
-                        Debug.Log("템 주움::캐릭터위치->방향 포인트");
-                        Debug.DrawRay(m_MyProfile.Current_Pos, dir[i], Color.yellow);*/
-
-                        IsHit = true;
-                        return hitinfo.collider.GetComponentInChildren<ItemBase>();
-                    }
-                    else
-                    {
-                        //IsHit = false;
-                    }
-
-                }
+            if (nearestItem.TryGetComponent(out ItemBase _itemBase))
+            {
+                IsHit = true;
+                _item = _itemBase;
+                return true;
             }
+            IsHit = false;
         }
-        return null;
+        _item = null;
+        return false;
     }
 
     void FindOnFieldItem()
     {
-        ItemBase item = FindViewInNoPressItem();
-        if (item != null)
+        if (TryFindNearestItem(out ItemBase item))
         {
             TooltipManager.Instance.InvokeTooltip(x =>
             {
-                x.ViewSideInItemMessage(item, m_MyProfile.Current_Pos, acquireDist);
-                x.DrawOnHeadMessage(m_CameraAxis.gameObject);
-                x.ShowMessage(MessageStyle.ON_HEAD_MSG, item.item.itemName + "아이템을 찾음 ㅅㄱ", m_CameraAxis.position);
+                x.ShowMessage(MessageStyle.ON_HEAD_MSG, "아이템을 못찾았어!", m_CameraAxis.position);
             }, MessageStyle.ON_HEAD_MSG);
         }
         else
         {
             TooltipManager.Instance.InvokeTooltip(x =>
             {
-                x.ShowMessage(MessageStyle.ON_HEAD_MSG, "아이템을 못찾았어!", m_CameraAxis.position);
+                x.ViewSideInItemMessage(item, m_MyProfile.Current_Pos, acquireDist);
+                x.DrawOnHeadMessage(m_CameraAxis.gameObject);
+                x.ShowMessage(MessageStyle.ON_HEAD_MSG, item.item.itemName + "아이템을 찾음 ㅅㄱ", m_CameraAxis.position);
             }, MessageStyle.ON_HEAD_MSG);
         }
     }
