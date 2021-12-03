@@ -325,8 +325,13 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
 
     public void OnGetGameResultFromServer(Profile_RoundResult _Result)
     {
-        RoundResult result = new RoundResult();
-        result.GetResultDataFromServer(_Result);
+        SceneManager.LoadScene("CombatResult");
+        if(SceneManager.GetActiveScene().name == "CombatResult")
+        {
+            ResultScreen result = FindObjectOfType<ResultScreen>();
+            result.GameResult = new RoundResult();
+            result.GameResult.GetResultDataFromServer(_Result);
+        }
     }
 
     IEnumerator End_Game_Process()

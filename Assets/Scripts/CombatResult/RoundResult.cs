@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using Network.Data;
 
-public class RoundResult : MonoBehaviour
+public class RoundResult
 {
     public int score; // 스코어
 
@@ -28,11 +28,6 @@ public class RoundResult : MonoBehaviour
 
     public Profile_RoundResult NetData { get; private set; }
     public CharacterController Player { get; private set; } // 플레이어 세팅해야하는데 이게 안왔어..
-
-    void Start()
-    {
-        
-    }
 
     public void GetResultDataFromServer(Profile_RoundResult _Result)
     {

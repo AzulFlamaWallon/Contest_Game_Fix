@@ -16,26 +16,48 @@ public class ResultScreen : MonoBehaviour
     public Button btn_Retry;
     public Button btn_Quit;
 
-    CharacterController m_PlayerCtrler;
-    private void Init()
+    public RoundResult GameResult { get; set; }
+    private void Start()
     {
-        resultTitle.text = "게임 결과";
+        SetModelCombatResult();
+        SetResultScreen();
     }
 
-    void SetModelCombatResult(bool _IsWin)
+    public void SetModelCombatResult()
     {
-        if(_IsWin)
+        if(GameResult.IsWinner)
         {
-            if(m_PlayerCtrler.TryGetComponent(out Animator _anim))
+            if(GameResult.Player.TryGetComponent(out Animator _anim))
             {
                 // 승리 캐릭터 모델 애니메이션
             }
         }
     }
 
-    void GetCombatResultServer()
+    // 여기에 받아온 캐릭터들 정보 입력
+    public void SetResultScreen()
     {
-
+        
+        switch (GameResult.Player.m_MyProfile.Role_Index)
+        {
+            case 1:
+                resultCompo[0].text = "" + GameResult.timeup.ToString();
+                resultCompo[1].text = "" + GameResult.shootCount.ToString();
+                resultCompo[2].text = "" + GameResult.rootingCount.ToString();
+                resultCompo[3].text = "" + GameResult.averageRoundTime.ToString();
+                resultCompo[4].text = "" + GameResult.clearTime.ToString();
+                resultCompo[5].text = "" + GameResult.retryCount.ToString();
+                break;
+            case 2:
+                resultCompo[0].text = "" + GameResult.timeup.ToString();
+                resultCompo[1].text = "" + GameResult.shootCount.ToString();
+                resultCompo[2].text = "" + GameResult.rootingCount.ToString();
+                resultCompo[3].text = "" + GameResult.averageRoundTime.ToString();
+                resultCompo[4].text = "" + GameResult.clearTime.ToString();
+                resultCompo[5].text = "" + GameResult.retryCount.ToString();
+                break;
+        }
+        
     }
 
 

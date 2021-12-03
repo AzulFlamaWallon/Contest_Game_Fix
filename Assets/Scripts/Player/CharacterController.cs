@@ -105,6 +105,7 @@ public class CharacterController : MonoBehaviour
         // 프로필에 해당하는 툴 등록
         RegisterTools();
 
+        Initialize();
     }
 
     void RegisterEvents()
