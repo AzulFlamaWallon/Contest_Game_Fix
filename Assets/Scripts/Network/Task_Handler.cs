@@ -161,8 +161,9 @@ public class Task_Handler
                  * 이 아래서 화면으로 넘어가는 로직으로 생각 중임.(데이터도 여기서 넘길예정)
                  */
                 Profile_RoundResult result = new Profile_RoundResult();
+                User_Profile profile = new User_Profile();
                 result.Init();
-                Packet_Unpacker.UnPackPacket(_task.buffer, ref result);
+                Packet_Unpacker.UnPackPacket(_task.buffer, ref result, ref profile);
                 _manager.e_GameReuslt.Invoke(result);
 
             }

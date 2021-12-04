@@ -299,7 +299,7 @@ public class Packet_Unpacker
         }
     }
 
-    public static void UnPackPacket(byte[] _data, ref Profile_RoundResult _result)
+    public static void UnPackPacket(byte[] _data, ref Profile_RoundResult _result,ref User_Profile user)
     {
         _result.Init();
         int place = 0;
@@ -323,6 +323,18 @@ public class Packet_Unpacker
 
         _result.minTime = BitConverter.ToUInt64(_data, place);
         place += sizeof(UInt64);
+
+        strlen = BitConverter.ToUInt16(_data, place);
+        place += sizeof(UInt16);
+        user.ID = Encoding.Unicode.GetString(_data, place, strlen);
+        place += strlen;
+
+        user.Score = BitConverter.ToUInt16(_data, place);
+        place += sizeof(UInt16);
+
+        user.Role_Index = BitConverter.ToUInt16(_data, place);
+        place += sizeof(UInt16);
+
 
     }
 }
