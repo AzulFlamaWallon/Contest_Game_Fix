@@ -167,13 +167,13 @@ public class Task_Handler
                 _manager.e_GameReuslt.Invoke(result, profile);
 
             }
-            if ((_protocol & (UInt64)PROTOCOL_INGAME.END_LOBBY) > 0)
-            {
-                Debug.Log("게임종료. 로비로.");
-                /*
-                 *  요기도 똑같음 ㅇㅇㅇㅇㅇ
-                 */
-            }
+            //if ((_protocol & (UInt64)PROTOCOL_INGAME.END_LOBBY) > 0)
+            //{
+            //    Debug.Log("게임종료. 로비로.");
+            //    /*
+            //     *  요기도 똑같음 ㅇㅇㅇㅇㅇ
+            //     */
+            //}
         }
         if ((_protocol & (UInt64)PROTOCOL_INGAME.ITEM) > 0) // 아이템
         {
