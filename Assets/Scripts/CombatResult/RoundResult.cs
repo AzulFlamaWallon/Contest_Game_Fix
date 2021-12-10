@@ -29,11 +29,11 @@ public class RoundResult
     public Profile_RoundResult NetData { get; private set; }
     public CharacterController Player { get; private set; } // 플레이어 세팅해야하는데 이게 안왔어..
 
-    public void GetResultDataFromServer(Profile_RoundResult _Result)
+    public void GetResultDataFromServer(Profile_RoundResult _Result, User_Profile _Profile)
     {
         NetData          = _Result;
 
-        score            = Player.m_MyProfile.Score;
+        score            = _Profile.Score;
         nowRound         = NetData.Current_Round;
         timeup           = NetData.Time_Up;
         IsWinner         = NetData.Result_flag;

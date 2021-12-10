@@ -36,6 +36,8 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
     public Event_Player_Input e_FakeInput = new Event_Player_Input();
     public int m_FakeMap = 1, m_FakeRound = 1;
 
+    ResultScreen m_ResultScreenUI;
+
     IEnumerator Start()
     {
         if (m_DebugMode)
@@ -79,7 +81,9 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
         Manager_Network.Instance.e_GameEnd.AddListener(new UnityAction<SESSION_END_REASON>(End_Game));
         Manager_Network.Instance.e_ItemSpawn.AddListener(new UnityAction<Item_Data[]>(OnGetItemDataFromServer));
         Manager_Network.Instance.e_ItemGet.AddListener(new UnityAction<int>(OnGetItemPlayer));
-        Manager_Network.Instance.e_GameReuslt.AddListener(new UnityAction<Profile_RoundResult>(OnGetGameResultFromServer));
+        Manager_Network.Instance.e_GameReuslt.AddListener(new UnityAction<Profile_RoundResult, User_Profile>(OnGetGameResultFromServer));
+
+        m_ResultScreenUI = Resources.Load<ResultScreen>("Prefabs/UI/ResultScreen");
 
         Resources.UnloadUnusedAssets();
     }
@@ -323,15 +327,10 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
         }
     }
 
-    public void OnGetGameResultFromServer(Profile_RoundResult _Result)
+    public void OnGetGameResultFromServer(Profile_RoundResult _Result, User_Profile _Profile)
     {
-        SceneManager.LoadScene("CombatResult");
-        if(SceneManager.GetActiveScene().name == "CombatResult")
-        {
-            ResultScreen result = FindObjectOfType<ResultScreen>();
-            result.GameResult = new RoundResult();
-            result.GameResult.GetResultDataFromServer(_Result);
-        }
+        m_ResultScreenUI.GameResult = new RoundResult();
+        m_ResultScreenUI.GameResult.GetResultDataFromServer(_Result, _Profile);
     }
 
     IEnumerator End_Game_Process()

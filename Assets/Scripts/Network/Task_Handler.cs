@@ -164,7 +164,7 @@ public class Task_Handler
                 User_Profile profile = new User_Profile();
                 result.Init();
                 Packet_Unpacker.UnPackPacket(_task.buffer, ref result, ref profile);
-                _manager.e_GameReuslt.Invoke(result);
+                _manager.e_GameReuslt.Invoke(result, profile);
 
             }
             if ((_protocol & (UInt64)PROTOCOL_INGAME.END_LOBBY) > 0)

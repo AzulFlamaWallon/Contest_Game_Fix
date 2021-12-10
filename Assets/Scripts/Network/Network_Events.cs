@@ -28,5 +28,5 @@ namespace Network.Data
     public class Event_Player_Input : UnityEvent<User_Profile[]> { };
     public class Event_Player_Hit : UnityEvent<UInt16, UInt16> { };
     public class Event_Player_Stun : UnityEvent<UInt16, UInt16> { };
-    public class Event_Get_GameResult : UnityEvent<Profile_RoundResult> { };
+    public class Event_Get_GameResult : UnityEvent<Profile_RoundResult, User_Profile> { };
 }
