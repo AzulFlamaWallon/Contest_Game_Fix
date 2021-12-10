@@ -68,6 +68,7 @@ public class PopupWindowBase : PanelPopupBase
     {
         OutResult = PopUpResult.OK;
         m_PopupAction?.Invoke(OutResult);
+        animator.SetTrigger("Deactivate");
     }
 
     public void OnPressCancelButton()

@@ -77,8 +77,6 @@ public class CharacterController : MonoBehaviour
     public float acquireDist = 10.0f;
     public float itemSearchDuration = 1.0f;
     public LayerMask ItemLayer;
-    private Vector3[] hitPos;
-    private Vector3[] dir;
 
     private bool IsHit = false;
 

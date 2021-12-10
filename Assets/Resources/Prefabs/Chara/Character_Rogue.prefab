@@ -2681,6 +2681,7 @@ GameObject:
   - component: {fileID: 5394443342029118031}
   - component: {fileID: 9142727481664044200}
   - component: {fileID: 5394443342023781532}
+  - component: {fileID: 2459535107994432147}
   m_Layer: 8
   m_Name: Character_Rogue
   m_TagString: Player
@@ -2790,13 +2791,13 @@ MonoBehaviour:
   - {fileID: 0}
   m_CameraAxis: {fileID: 5870439392837528170}
   m_Before_Position: {x: 0, y: 0, z: 0}
-  acquireEnabled: 0
   acquireDist: 10
   itemSearchDuration: 5
   ItemLayer:
     serializedVersion: 2
     m_Bits: 8192
-  playerState: {fileID: 0}
+  charastate: 0
+  playerState: {fileID: 2459535107994432147}
 --- !u!114 &5394443342023781532
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2824,6 +2825,19 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   CloakingSound: {fileID: 1806674500990626270}
+--- !u!114 &2459535107994432147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5394443342023781533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85871ff410f6f6044a20f1ef826b8322, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  charaAnimator: {fileID: 815687957381276822}
 --- !u!1 &5870439392097707752
 GameObject:
   m_ObjectHideFlags: 0

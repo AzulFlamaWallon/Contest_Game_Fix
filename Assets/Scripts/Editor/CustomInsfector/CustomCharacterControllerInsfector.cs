@@ -55,14 +55,17 @@ public class CustomCharacterControllerInsfector : Editor
             CustomEditorProperty.UseProperty("m_Before_Position", "이전 위치", "캐릭터의 이전에 있던 위치");
         }
         EditorGUILayout.Space();
-        EditorGUILayout.LabelField(new GUIContent("아이템 인식 설정"), UILayout.CustomizeGUIStyle(new CustomLabel(FontStyle.Bold, 12, Color.white, new CustomTex2D(10, 5, Color.grey))));
+        EditorGUILayout.LabelField(new GUIContent("아이템 인식 설정"), UILayout.CustomizeGUIStyle(new CustomLabel(FontStyle.Bold, 12, Color.white, new CustomTex2D(10, 5, Color.black))));
 
         CustomEditorProperty.UseProperty("acquireDist", "아이템 인식거리", "아이템 인식거리");
         EditorGUILayout.Space();
         CustomEditorProperty.UseProperty("itemSearchDuration", "아이템 탐색 주기", "아이템 탐색 주기");
         CustomEditorProperty.UseProperty("ItemLayer", "아이템 레이어", "아이템 레이어");
 
-
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField(new GUIContent("캐릭터 상태"), UILayout.CustomizeGUIStyle(new CustomLabel(FontStyle.Bold, 12, Color.white, new CustomTex2D(10, 5, Color.black))));
+        CustomEditorProperty.UseProperty("charastate", "캐릭터 상태", "캐릭터 상태");
+        CustomEditorProperty.UseProperty("playerState", "상태머신", "상태머신");
         if (GUI.changed)
         {
             EditorUtility.SetDirty(target);
