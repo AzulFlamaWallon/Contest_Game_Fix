@@ -19,11 +19,12 @@ public class ResultScreen : MonoBehaviour
 
     public RoundResult GameResult { get; set; }
 
-
-    private void Start()
+    void Init()
     {
-        //SetModelCombatResult();
-        SetResultScreen();
+        transform.localRotation = Quaternion.identity;
+        transform.localScale = Vector3.one;
+        transform.localPosition = Vector3.zero;
+        transform.SetAsLastSibling();
     }
 
     public void SetModelCombatResult()
@@ -38,9 +39,9 @@ public class ResultScreen : MonoBehaviour
     }
 
     // 여기에 받아온 캐릭터들 정보 입력
-    public void SetResultScreen()
+    public void ShowResultScreen()
     {
-        
+        Init();
         switch (GameResult.Player.m_MyProfile.Role_Index)
         {
             case 1:
@@ -64,9 +65,15 @@ public class ResultScreen : MonoBehaviour
         resultCompo[5].text = "스코어 " + GameResult.score.ToString();
 
         btn_Retry.gameObject.GetComponentInChildren<Text>().text = "Retry";
-        btn_Retry.onClick.AddListener(() => Manager_Ingame.Instance.Quit_Game());
+        btn_Retry.onClick.AddListener(() => Retry());
         btn_Quit.gameObject.GetComponentInChildren<Text>().text = "Quit";
         btn_Quit.onClick.AddListener(() => Application.Quit());
+    }
+
+    void Retry()
+    {
+        Manager_Ingame.Instance.Quit_Game();
+        Destroy(this);
     }
 
 
