@@ -35,7 +35,8 @@ public class Weapon_StunGun : Tool, I_IK_Shotable
 
     List<UInt16>  victim_IDs = new List<UInt16>();
     List<Vector3> impact_Pos = new List<Vector3>();
-
+  
+    SpawnerEx<PelletTrail> m_PelletTrail;
 
     public AnimationClip Get_Aim_Anim()
     {
@@ -77,8 +78,6 @@ public class Weapon_StunGun : Tool, I_IK_Shotable
 
         // This Add HitScan Logic
         Vector3 fwdDir = attacker.m_CameraAxis.forward;
-
-        
 
         sfx_Fire.PlayOneShot(sfx_Fire.clip); // Play Sound
 

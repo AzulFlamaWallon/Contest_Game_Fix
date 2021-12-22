@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class TrailBase<T> : MonoBehaviour
+public class TrailBase<T> : MonoBehaviour, IResettable
 {
     public T currentObj;
     public float speed;
@@ -32,5 +32,10 @@ public class TrailBase<T> : MonoBehaviour
     {
         if (trail != null || gameObject != null) // 혹시라도 삭제가 되지 않았다면
             Destroy(gameObject);
+    }
+
+    public void DeActive()
+    {
+        gameObject.SetActive(false);
     }
 }

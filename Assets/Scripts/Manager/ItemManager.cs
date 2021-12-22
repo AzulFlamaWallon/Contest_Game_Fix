@@ -6,8 +6,7 @@ using UnityEngine;
 
 public class ItemManager : SingleToneMonoBehaviour<ItemManager>
 {
-    [CustomRange(0.0f, 15.0f)]
-    public float removeRange = 10.0f;
+    protected float removeRange = 10.0f;
 
     [HideInInspector]
     public List<ItemBase> itemList = new List<ItemBase>();

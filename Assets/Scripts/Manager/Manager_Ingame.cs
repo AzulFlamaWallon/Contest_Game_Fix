@@ -11,7 +11,13 @@ public class Event_RoundUpdate : UnityEvent<GameObject, Minimap> { }
 public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
 {
     public float m_Input_Update_Interval = 0.025f; // 인풋 보내는 속도
-
+    public enum InGameState
+    {
+        GameStart,
+        RoundStart,
+        RoundEnd,
+        GameEnd,
+    }
     [Header("세션 정보")]
     public Session_RoundData m_RoundData = new Session_RoundData();
     public User_Profile m_Client_Profile = new User_Profile();
@@ -21,6 +27,8 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
     public bool m_Game_Started = false;
     public int m_MapID = 0;
     public int m_Round = 0;
+    public InGameState inGameState;
+    public bool IsGameEnd { get; protected set; }
 
     [Header("프리팹")]
     public GameObject prefab_Guard;
@@ -40,6 +48,7 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
 
     IEnumerator Start()
     {
+        IsGameEnd = true;
         if (m_DebugMode)
         {
             User_Profile up = new User_Profile
@@ -86,15 +95,17 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
         Resources.UnloadUnusedAssets();
     }
 
+
+
     private void FixedUpdate()
     {
         if (m_DebugMode)
             return;
 
-        if (m_Game_Started)
+        if (inGameState == InGameState.RoundStart)
         {
             m_Heartbeat_Wait += Time.fixedDeltaTime;
-            if (m_Heartbeat_Wait > 5.0f) // 하트비트가 너무 안 오면 타이틀로
+            if (!IsGameEnd && m_Heartbeat_Wait > 5.0f) // 게임이 진행중이고 하트비트가 너무 안 오면 타이틀로
             {
                 Quit_Game();
             }
@@ -196,6 +207,7 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
     /// <param name="_map_id"></param>
     public void Start_Game(int _map_id)
     {
+        inGameState = InGameState.GameStart;
         m_MapID = _map_id;
         StartCoroutine(Start_Game_Process());
     }
@@ -245,7 +257,7 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
 
         yield return new WaitForSeconds(2.0f);
 
-        if (m_DebugMode)
+        if (inGameState == InGameState.GameStart)
             Start_Round();
         else
         {
@@ -259,7 +271,7 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
 
     public void Start_Round()
     {
-        m_Game_Started = true;
+        inGameState = InGameState.RoundStart;
         Add_Delayed_Coroutine(Start_Round_Process());
     }
     IEnumerator Start_Round_Process()
@@ -273,7 +285,7 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
         yield return new WaitForSeconds(2.0f);
 
         // 라운드 갱신 GUI 표시
-        m_Game_Started = true;
+        inGameState = InGameState.RoundStart;
         ui.m_Ingame_Round_Indicator.Start_Round(m_Round);
         Play_Next_Coroutine();
 
@@ -303,7 +315,7 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
     {
         Ingame_UI ui = Ingame_UI.Instance;
 
-        m_Game_Started = false;
+        inGameState = InGameState.GameEnd;
         ui.Lock_Cursor(false);
         // 터졌으면 터진대로 처리해줄 것
         switch (_reason)
@@ -327,7 +339,8 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
 
     public void OnGetGameResultFromServer(Profile_RoundResult _Result, User_Profile _Profile)
     {
-        m_ResultScreenUI = Instantiate(Resources.Load<ResultScreen>("Prefabs/UI/ResultScreen"), Instance.transform, false);
+        inGameState = InGameState.GameEnd;
+        m_ResultScreenUI = Instantiate(Resources.Load<ResultScreen>("Prefabs/UI/ResultScreen"), Ingame_UI.Instance.transform, false);
         m_ResultScreenUI.GameResult = new RoundResult();
         m_ResultScreenUI.GameResult.GetResultDataFromServer(_Result, _Profile);
         m_ResultScreenUI.ShowResultScreen();
@@ -352,7 +365,7 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
         Ingame_UI.Instance.Lock_Cursor(false);
         Ingame_UI.Instance.Initialize();
         // Destroy(Ingame_UI.Instance.gameObject);
-        m_Game_Started = false;
+        inGameState = InGameState.GameEnd;
         if (Manager_Network.Instance != null)
             Manager_Network.Instance.Disconnect();
         SceneManager.LoadScene("Title");
@@ -363,7 +376,7 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
         WaitForSecondsRealtime wfsr = new WaitForSecondsRealtime(m_Input_Update_Interval);
         while (true)
         {
-            while (m_Game_Started)
+            while (inGameState == InGameState.RoundStart)
             {
                 if (m_DebugMode)
                 {

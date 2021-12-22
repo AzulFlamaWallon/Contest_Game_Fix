@@ -29,7 +29,7 @@ public class Manager_Input : SingleToneMonoBehaviour<Manager_Input>
 
     void Update()
     {
-        if (Manager_Ingame.Instance.m_Game_Started)
+        if (Manager_Ingame.Instance.inGameState == Manager_Ingame.InGameState.RoundStart)
         {
             Update_MouseView();
         }
@@ -178,7 +178,7 @@ public class Manager_Input : SingleToneMonoBehaviour<Manager_Input>
     /// <param name="_context"></param>
     public void onMenu(CallbackContext _context)
     {
-        if (Manager_Ingame.Instance.m_Game_Started)
+        if (Manager_Ingame.Instance.inGameState == Manager_Ingame.InGameState.RoundStart)
             Ingame_UI.Instance.m_Menu.Toggle();
     }
     
@@ -188,7 +188,7 @@ public class Manager_Input : SingleToneMonoBehaviour<Manager_Input>
     /// <param name="_context"></param>
     public void onScoreboard(CallbackContext _context)
     {
-        if (Manager_Ingame.Instance.m_Game_Started)
+        if (Manager_Ingame.Instance.inGameState == Manager_Ingame.InGameState.RoundStart)
             Ingame_UI.Instance.m_Scoreboard.SetActive(_context.ReadValueAsButton());
     }
 

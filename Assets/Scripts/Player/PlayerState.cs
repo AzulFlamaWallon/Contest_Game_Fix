@@ -20,7 +20,7 @@ public class PlayerState : MonoBehaviour
     * PLAYER_IDLE
     */
     public void PlayerIdle_Enter()
-    {
+    {       
         charaAnimator.SetBool("Idle", true);
     }
 

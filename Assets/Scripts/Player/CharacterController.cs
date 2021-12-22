@@ -94,15 +94,6 @@ public class CharacterController : MonoBehaviour
             yield return new WaitForEndOfFrame();
         InputManager = Manager_Input.Instance;
 
-        // 입력 이벤트 등록
-        RegisterEvents();
-        
-        // 아이템 체크 로직
-        //StartCoroutine(Update_FieldOnItem());
-
-        // 프로필에 해당하는 툴 등록
-        RegisterTools();
-
         Initialize();
     }
 
@@ -125,9 +116,7 @@ public class CharacterController : MonoBehaviour
             Manager_Network.Instance.e_HeartBeat.AddListener(m_PlayerUpdatePosEvts);
             Manager_Network.Instance.e_PlayerHit.AddListener(m_PlayerDamageEvts);
             Manager_Network.Instance.e_PlayerStun.AddListener(m_PlayerStunEvts);
-        }  
-        
-        
+        }    
     }
 
     void RegisterTools()
@@ -140,13 +129,27 @@ public class CharacterController : MonoBehaviour
         ChangeTool(1);
     }
 
-    private void Initialize()
+    void Initialize()
     {
+        // 입력 이벤트 등록
+        RegisterEvents();
+
+        // 아이템 체크 로직
+        //StartCoroutine(Update_FieldOnItem());
+
+        // 프로필에 해당하는 툴 등록
+        RegisterTools();
+
         m_Rigidbody = GetComponent<Rigidbody>();
         m_CapsuleCollider = GetComponentInChildren<CapsuleCollider>();
     }
 
     void OnDestroy()
+    {
+        UnRegisterEvents();
+    }
+
+    void UnRegisterEvents()
     {
         // 등록된 이벤트 떼기
         if (Manager_Network.Instance == null)
@@ -518,9 +521,6 @@ public class CharacterController : MonoBehaviour
     /// </summary>
     public void AcquireItem()
     {
-        //ItemBase item = FindViewInItem(); // 만약 아이템을 발견했다면 해당 아이템을 가져와서 
-        //ItemBase item = FindNearestItem();
-
         if (!ReferenceEquals(Manager_Network.Instance, null) && TryFindNearestItem(out ItemBase item)) // 통신이 안끊겼고, 아이템일때
         {
             Debug.Log("아이템명칭 : " + item.item.itemName + "," + "반환받은 객체이름 : " + item.name);
