@@ -14,6 +14,7 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
     public enum InGameState
     {
         GameStart,
+        RoundReady,
         RoundStart,
         RoundEnd,
         GameEnd,
@@ -207,7 +208,7 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
     /// <param name="_map_id"></param>
     public void Start_Game(int _map_id)
     {
-        inGameState = InGameState.RoundStart;
+        inGameState = InGameState.GameStart;
         m_MapID = _map_id;
         StartCoroutine(Start_Game_Process());
     }
@@ -233,6 +234,7 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
     /// <param name="_round"></param>
     public void Prepare_Round(int _round)
     {
+        inGameState = InGameState.RoundReady;
         m_Round = _round;
         Add_Delayed_Coroutine(Prepare_Round_Process());
     }
@@ -376,7 +378,7 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
         WaitForSecondsRealtime wfsr = new WaitForSecondsRealtime(m_Input_Update_Interval);
         while (true)
         {
-            while (inGameState == InGameState.RoundStart)
+            while (inGameState == InGameState.RoundStart || inGameState == InGameState.GameStart)
             {
                 if (m_DebugMode)
                 {
