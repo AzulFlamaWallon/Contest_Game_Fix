@@ -105,7 +105,7 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
         if (inGameState == InGameState.RoundStart)
         {
             m_Heartbeat_Wait += Time.fixedDeltaTime;
-            if (!IsGameEnd && m_Heartbeat_Wait > 5.0f) // 게임이 진행중이고 하트비트가 너무 안 오면 타이틀로
+            if (inGameState != InGameState.GameEnd && m_Heartbeat_Wait > 5.0f) // 게임이 진행중이고 하트비트가 너무 안 오면 타이틀로
             {
                 Quit_Game();
             }
@@ -207,7 +207,7 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
     /// <param name="_map_id"></param>
     public void Start_Game(int _map_id)
     {
-        inGameState = InGameState.GameStart;
+        inGameState = InGameState.RoundStart;
         m_MapID = _map_id;
         StartCoroutine(Start_Game_Process());
     }
@@ -257,7 +257,7 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
 
         yield return new WaitForSeconds(2.0f);
 
-        if (inGameState == InGameState.GameStart)
+        if (inGameState == InGameState.RoundStart)
             Start_Round();
         else
         {
