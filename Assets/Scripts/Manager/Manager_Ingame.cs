@@ -92,7 +92,7 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
         Manager_Network.Instance.e_ItemSpawn.AddListener(new UnityAction<Item_Data[]>(OnGetItemDataFromServer));
         Manager_Network.Instance.e_ItemGet.AddListener(new UnityAction<int>(OnGetItemPlayer));
         Manager_Network.Instance.e_GameReuslt.AddListener(new UnityAction<Profile_RoundResult, User_Profile>(OnGetGameResultFromServer));
-
+        PopupManager.CreatePrecachePopup();
         Resources.UnloadUnusedAssets();
     }
 
@@ -106,9 +106,20 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
         if (inGameState == InGameState.RoundStart)
         {
             m_Heartbeat_Wait += Time.fixedDeltaTime;
-            if (inGameState != InGameState.GameEnd && m_Heartbeat_Wait > 5.0f) // 게임이 진행중이고 하트비트가 너무 안 오면 타이틀로
+            if (m_Heartbeat_Wait > 5.0f) // 게임이 진행중이고 하트비트가 너무 안 오면 타이틀로
             {
-                Quit_Game();
+                PopupManager.Instance.IsOnlyOneInvoke = true;
+                PopupManager.PrecachedPopup.Ok("나가기", _ =>
+                {
+                    _ = PopUpResult.OK;
+                    Quit_Game();
+                    PopupManager.Instance.IsOnlyOneInvoke = false;
+                }).Cancel("안나갈래요", _ =>
+                {
+                    _ = PopUpResult.Cancel;
+                    m_Heartbeat_Wait = 0.0f;
+                }).Show("에러", "서버로부터 응답이 없습니다. 나가시겠습니까?");
+                PopupManager.ShowPrecachePopup();
             }
         }
     }

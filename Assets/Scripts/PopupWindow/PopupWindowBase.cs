@@ -54,28 +54,38 @@ public class PopupWindowBase : PanelPopupBase
         title.text = _Title;
         desc.text = _Desc;
         obj_Cancel.gameObject.SetActive(IsShowCancel);
-        ShowPopup();
+        Show();
     }
 
     public void Show(string _Desc)
     {
         desc.text = _Desc;
         obj_Cancel.gameObject.SetActive(IsShowCancel);
-        ShowPopup();
+        Show();
+    }
+
+    public override void ShowPopup()
+    {
+        animator.SetTrigger("Activate");
+    }
+
+    public override void HidePopup()
+    {
+        animator.SetTrigger("Deactivate");
     }
 
     public void OnPressOKButton()
     {
         OutResult = PopUpResult.OK;
         m_PopupAction?.Invoke(OutResult);
-        animator.SetTrigger("Deactivate");
+        Hide();
     }
 
     public void OnPressCancelButton()
     {
         OutResult = PopUpResult.Cancel;
         m_PopupAction?.Invoke(OutResult);
-        animator.SetTrigger("Deactivate");
+        Hide();
     }
 
 

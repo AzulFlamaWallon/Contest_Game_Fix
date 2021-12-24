@@ -27,6 +27,7 @@ public class PanelPopupBase : MonoBehaviour
 
         Initialize();
         UpdatePopup();
+        ShowPopup();
         PopupPanelObj.SetActive(true);
     }
 
