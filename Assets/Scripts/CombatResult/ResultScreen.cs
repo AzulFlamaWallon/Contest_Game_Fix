@@ -21,50 +21,36 @@ public class ResultScreen : MonoBehaviour
 
     void Init()
     {
-        transform.localRotation = Quaternion.identity;
-        transform.localScale = Vector3.one;
-        transform.localPosition = Vector3.zero;
-        transform.SetAsLastSibling();
-    }
-
-    public void SetModelCombatResult()
-    {
-        if(GameResult.IsWinner)
-        {
-            if(GameResult.Player.TryGetComponent(out Animator _anim))
-            {
-                // 승리 캐릭터 모델 애니메이션
-            }
-        }
+        transform.SetAsLastSibling();   
     }
 
     // 여기에 받아온 캐릭터들 정보 입력
     public void ShowResultScreen()
     {
         Init();
-        switch (GameResult.Player.m_MyProfile.Role_Index)
+        switch (GameResult.meProfile.Role_Index)
         {
             case 1:
-                resultCompo[0].text = "생존시간 : " + GameResult.timeup.ToString();
-                resultCompo[1].text = "가드스턴수 : " + GameResult.shootCount.ToString();
-                resultCompo[2].text = "물건획득수 : " + GameResult.rootingCount.ToString();
-                resultCompo[3].text = "평균생존시간 : " + GameResult.averageRoundTime.ToString();
-                resultCompo[4].text = "최장 생존 시간 :" + GameResult.clearTime.ToString();
-                winText.text = "Rogue " + GameResult.IsWinner.ToString();
-                winText.color = Color.red;
-                break;
-            case 2:
                 resultCompo[0].text = "소탕시간 : " + GameResult.timeup.ToString();
                 resultCompo[1].text = "발포횟수 : " + GameResult.shootCount.ToString();
                 resultCompo[2].text = "검거횟수" + GameResult.rootingCount.ToString();
                 resultCompo[3].text = "평균소탕시간" + GameResult.averageRoundTime.ToString();
                 resultCompo[4].text = "최소소탕시간" + GameResult.clearTime.ToString();
-                winText.text = "Guard " + GameResult.IsWinner.ToString();
+                winText.text = "Guard " + GameResult.winText;
+                break;
+            case 2:
+                resultCompo[0].text = "생존시간 : " + GameResult.timeup.ToString();
+                resultCompo[1].text = "가드스턴수 : " + GameResult.shootCount.ToString();
+                resultCompo[2].text = "물건획득수 : " + GameResult.rootingCount.ToString();
+                resultCompo[3].text = "평균생존시간 : " + GameResult.averageRoundTime.ToString();
+                resultCompo[4].text = "최장 생존 시간 :" + GameResult.clearTime.ToString();
+                winText.text = "Rogue " + GameResult.winText;
+                winText.color = Color.red;
                 break;
         }
         resultCompo[5].text = "스코어 " + GameResult.score.ToString();
 
-        btn_Retry.gameObject.GetComponentInChildren<Text>().text = "Retry";
+        btn_Retry.gameObject.GetComponentInChildren<Text>().text = "Retry"; // 이녀석만 남았다
         btn_Retry.onClick.AddListener(() => Retry());
         btn_Quit.gameObject.GetComponentInChildren<Text>().text = "Quit";
         btn_Quit.onClick.AddListener(() => Application.Quit());

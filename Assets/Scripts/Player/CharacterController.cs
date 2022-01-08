@@ -48,10 +48,10 @@ public class CharacterController : MonoBehaviour
     
 
     // 프로퍼티
-    public User_Profile ClientProfile
+    public static User_Profile ClientProfile
     {
         get => Manager_Ingame.Instance.m_Client_Profile;
-        protected set => Manager_Ingame.Instance.m_Client_Profile = value;
+        set => Manager_Ingame.Instance.m_Client_Profile = value;
     }
 
     [Header("캐릭터 스탯")]

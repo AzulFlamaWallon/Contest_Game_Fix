@@ -26,8 +26,11 @@ public class RoundResult
 
     public UInt32 retryCount; // 리트 횟수
 
+    public string winText;
+
     public Profile_RoundResult NetData { get; private set; }
-    public CharacterController Player { get; private set; } // 플레이어 세팅해야하는데 이게 안왔어..
+
+    public User_Profile meProfile;
 
     public void GetResultDataFromServer(Profile_RoundResult _Result, User_Profile _Profile)
     {
@@ -42,5 +45,13 @@ public class RoundResult
         averageRoundTime = NetData.averageRoundTime;
         clearTime        = NetData.minTime;
         retryCount       = NetData.Result_Count;
+
+        if (IsWinner)      winText = "WIN";
+        else               winText = "LOSE";
+        
+        if(CharacterController.ClientProfile.ID.Contains(_Profile.ID))
+        {
+            meProfile = _Profile;
+        }
     }
 }

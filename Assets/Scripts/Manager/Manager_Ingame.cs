@@ -93,7 +93,7 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
         Manager_Network.Instance.e_ItemGet.AddListener(new UnityAction<int>(OnGetItemPlayer));
         Manager_Network.Instance.e_GameReuslt.AddListener(new UnityAction<Profile_RoundResult, User_Profile>(OnGetGameResultFromServer));
         PopupManager.CreatePrecachePopup();
-        Resources.UnloadUnusedAssets();
+        //Resources.UnloadUnusedAssets();
     }
 
 
@@ -353,7 +353,7 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
     public void OnGetGameResultFromServer(Profile_RoundResult _Result, User_Profile _Profile)
     {
         inGameState = InGameState.GameEnd;
-        m_ResultScreenUI = Instantiate(Resources.Load<ResultScreen>("Prefabs/UI/ResultScreen"), Ingame_UI.Instance.transform, false);
+        m_ResultScreenUI = Instantiate(Resources.Load<ResultScreen>("Prefabs/UI/ResultScreen"));
         m_ResultScreenUI.GameResult = new RoundResult();
         m_ResultScreenUI.GameResult.GetResultDataFromServer(_Result, _Profile);
         m_ResultScreenUI.ShowResultScreen();
