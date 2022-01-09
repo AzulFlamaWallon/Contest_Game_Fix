@@ -299,10 +299,11 @@ public class Packet_Unpacker
         }
     }
 
-    public static void UnPackPacket(byte[] _data, ref Profile_RoundResult _result,ref User_Profile user)
+    public static void UnPackPacket(byte[] _data, ref Profile_RoundResult _result,ref User_Profile[] user)
     {
         _result.Init();
         int place = 0;
+        UInt32 countSize = 0;
         UInt16 strlen = 0;
         place += sizeof(UInt64); // 프로토콜 점프
 
@@ -324,17 +325,24 @@ public class Packet_Unpacker
         _result.minTime = BitConverter.ToUInt64(_data, place);
         place += sizeof(UInt64);
 
-        strlen = BitConverter.ToUInt16(_data, place);
-        place += sizeof(UInt16);
-        user.ID = Encoding.Unicode.GetString(_data, place, strlen);
-        place += strlen;
+        countSize = BitConverter.ToUInt32(_data, place);
+        place += sizeof(UInt32);
 
-        user.Score = BitConverter.ToUInt16(_data, place);
-        place += sizeof(UInt16);
+        for(int i =0; i<countSize; i++)
+        {
+            user[i] = new User_Profile();
+            strlen = BitConverter.ToUInt16(_data, place);
+            place += sizeof(UInt16);
+            user[i].ID = Encoding.Unicode.GetString(_data, place, strlen);
+            place += strlen;
 
-        user.Role_Index = BitConverter.ToUInt16(_data, place);
-        place += sizeof(UInt16);
+            user[i].Score = BitConverter.ToUInt16(_data, place);
+            place += sizeof(UInt16);
 
+            user[i].Role_Index = BitConverter.ToUInt16(_data, place);
+            place += sizeof(UInt16);
+
+        }
 
     }
 }
