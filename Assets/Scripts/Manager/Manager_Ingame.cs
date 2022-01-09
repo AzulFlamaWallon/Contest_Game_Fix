@@ -91,7 +91,7 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
         Manager_Network.Instance.e_GameEnd.AddListener(new UnityAction<SESSION_END_REASON>(End_Game));
         Manager_Network.Instance.e_ItemSpawn.AddListener(new UnityAction<Item_Data[]>(OnGetItemDataFromServer));
         Manager_Network.Instance.e_ItemGet.AddListener(new UnityAction<int>(OnGetItemPlayer));
-        Manager_Network.Instance.e_GameReuslt.AddListener(new UnityAction<Profile_RoundResult, User_Profile>(OnGetGameResultFromServer));
+        Manager_Network.Instance.e_GameReuslt.AddListener(new UnityAction<Profile_RoundResult, User_Profile[]>(OnGetGameResultFromServer));
         PopupManager.CreatePrecachePopup();
         //Resources.UnloadUnusedAssets();
     }
@@ -350,13 +350,16 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
         }
     }
 
-    public void OnGetGameResultFromServer(Profile_RoundResult _Result, User_Profile _Profile)
+    public void OnGetGameResultFromServer(Profile_RoundResult _Result, User_Profile[] _Profile)
     {
         inGameState = InGameState.GameEnd;
         m_ResultScreenUI = Instantiate(Resources.Load<ResultScreen>("Prefabs/UI/ResultScreen"));
-        m_ResultScreenUI.GameResult = new RoundResult();
-        m_ResultScreenUI.GameResult.GetResultDataFromServer(_Result, _Profile);
-        m_ResultScreenUI.ShowResultScreen();
+        for (int i = 0; i < _Profile.Length; i++)
+        {
+            m_ResultScreenUI.GameResult = new RoundResult();
+            m_ResultScreenUI.GameResult.GetResultDataFromServer(_Result, _Profile[i]);
+            m_ResultScreenUI.ShowResultScreen();
+        }
     }
 
     IEnumerator End_Game_Process()
