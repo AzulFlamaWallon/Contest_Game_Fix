@@ -299,31 +299,44 @@ public class Packet_Unpacker
         }
     }
 
-    public static void UnPackPacket(byte[] _data, ref Profile_RoundResult _result,ref User_Profile[] user)
+    public static void UnPackPacket(byte[] _data, ref Profile_RoundResult[] _result,ref User_Profile[] user)
     {
-        _result.Init();
+
         int place = 0;
         UInt16 countSize = 0;
+        UInt16 resultSize = 0;
         UInt16 strlen = 0;
         place += sizeof(UInt64); // 프로토콜 점프
 
-        _result.Time_Up = BitConverter.ToUInt64(_data, place);
-        place += sizeof(UInt64);
-
-        _result.Result_flag = BitConverter.ToBoolean(_data, place);
-        place += sizeof(bool);
-
-        _result.Shoot_Count = BitConverter.ToUInt16(_data, place);
+        resultSize = BitConverter.ToUInt16(_data, place);
         place += sizeof(UInt16);
+        _result = new Profile_RoundResult[resultSize];
 
-        _result.Getting_Count = BitConverter.ToUInt16(_data, place);
-        place += sizeof(UInt16);
+        for (int i = 0; i < resultSize; i++)
+        {
+            _result[i].Init();
 
-        _result.averageRoundTime = BitConverter.ToUInt64(_data, place);
-        place += sizeof(UInt64);
+            _result[i].Time_Up = BitConverter.ToUInt64(_data, place);
+            place += sizeof(UInt64);
 
-        _result.minTime = BitConverter.ToUInt64(_data, place);
-        place += sizeof(UInt64);
+            _result[i].Result_flag = BitConverter.ToBoolean(_data, place);
+            place += sizeof(bool);
+
+            _result[i].Shoot_Count = BitConverter.ToUInt16(_data, place);
+            place += sizeof(UInt16);
+
+            _result[i].Getting_Count = BitConverter.ToUInt16(_data, place);
+            place += sizeof(UInt16);
+
+            _result[i].averageRoundTime = BitConverter.ToUInt64(_data, place);
+            place += sizeof(UInt64);
+
+            _result[i].minTime = BitConverter.ToUInt64(_data, place);
+            place += sizeof(UInt64);
+        }
+
+
+
 
         countSize = BitConverter.ToUInt16(_data, place);
         place += sizeof(UInt16);
