@@ -303,7 +303,7 @@ public class Packet_Unpacker
     {
         _result.Init();
         int place = 0;
-        UInt32 countSize = 0;
+        UInt16 countSize = 0;
         UInt16 strlen = 0;
         place += sizeof(UInt64); // 프로토콜 점프
 
@@ -325,8 +325,9 @@ public class Packet_Unpacker
         _result.minTime = BitConverter.ToUInt64(_data, place);
         place += sizeof(UInt64);
 
-        countSize = BitConverter.ToUInt32(_data, place);
-        place += sizeof(UInt32);
+        countSize = BitConverter.ToUInt16(_data, place);
+        place += sizeof(UInt16);
+        user = new User_Profile[countSize];
 
         for(int i =0; i<countSize; i++)
         {
@@ -341,7 +342,6 @@ public class Packet_Unpacker
 
             user[i].Role_Index = BitConverter.ToUInt16(_data, place);
             place += sizeof(UInt16);
-
         }
 
     }
