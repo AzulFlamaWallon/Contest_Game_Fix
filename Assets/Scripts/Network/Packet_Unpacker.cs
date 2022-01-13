@@ -347,8 +347,8 @@ public class Packet_Unpacker
             user[i] = new User_Profile();
             strlen = BitConverter.ToUInt16(_data, place);
             place += sizeof(UInt16);
-            user[i].ID = Encoding.Unicode.GetString(_data, place, strlen);
-            place += strlen;
+            user[i].Session_ID = BitConverter.ToUInt16(_data, place);
+            place += sizeof(UInt16);
 
             user[i].Score = BitConverter.ToUInt16(_data, place);
             place += sizeof(UInt16);
