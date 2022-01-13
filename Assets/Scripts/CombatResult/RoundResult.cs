@@ -32,7 +32,7 @@ public class RoundResult
 
     public User_Profile meProfile;
 
-    public void GetResultDataFromServer(Profile_RoundResult _Result, User_Profile _Profile)
+    public void GetResultDataFromServer(int _UserNo, Profile_RoundResult _Result, User_Profile _Profile)
     {
         NetData          = _Result;
 
@@ -49,7 +49,7 @@ public class RoundResult
         if (IsWinner)      winText = "WIN";
         else               winText = "LOSE";
         
-        if(CharacterController.ClientProfile.ID.Contains(_Profile.ID))
+        if(Manager_Ingame.Instance.m_Profiles[_UserNo].ID.Equals(_Profile.ID))
         {
             meProfile = _Profile;
         }
