@@ -124,7 +124,7 @@ PlayerSettings:
     16:10: 0
     16:9: 1
     Others: 0
-  bundleVersion: 0.5.73
+  bundleVersion: 0.5.82
   preloadedAssets:
   - {fileID: 11400000, guid: 48d9724f05d319243bdca9af4df2a09d, type: 2}
   metroInputSource: 0
@@ -170,7 +170,7 @@ PlayerSettings:
   androidMaxAspectRatio: 2.1
   applicationIdentifier: {}
   buildNumber: {}
-  AndroidBundleVersionCode: 5073
+  AndroidBundleVersionCode: 5082
   AndroidMinSdkVersion: 19
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1

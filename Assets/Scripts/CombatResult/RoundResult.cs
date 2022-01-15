@@ -28,30 +28,45 @@ public class RoundResult
 
     public string winText;
 
-    public Profile_RoundResult NetData { get; private set; }
+    public UInt16 session_ID;
+
+    public Profile_RoundResult meNetData;
 
     public User_Profile meProfile;
 
-    public void GetResultDataFromServer(int _UserNo, Profile_RoundResult _Result, User_Profile _Profile)
+    public void GetResultDataFromServer(Profile_RoundResult _Result, User_Profile _Profile)
     {
-        NetData          = _Result;
-
-        score            = _Profile.Score;
-        nowRound         = NetData.Current_Round;
-        timeup           = NetData.Time_Up;
-        IsWinner         = NetData.Result_flag;
-        shootCount       = NetData.Shoot_Count;
-        rootingCount     = NetData.Getting_Count;
-        averageRoundTime = NetData.averageRoundTime;
-        clearTime        = NetData.minTime;
-        retryCount       = NetData.Result_Count;
-
-        if (IsWinner)      winText = "WIN";
-        else               winText = "LOSE";
-        
-        if(Manager_Ingame.Instance.m_Profiles[_UserNo].ID.Equals(_Profile.ID))
+        int length = Manager_Ingame.Instance.m_Profiles.Count;
+        for (int i = 0; i < length; i++)
         {
-            meProfile = _Profile;
+            if (_Profile.Session_ID == Manager_Ingame.Instance.m_Profiles[i].Session_ID)
+            {//먼기아상
+                meProfile = _Profile;
+                
+            }
+            else
+            {
+                meProfile = Manager_Ingame.Instance.m_Client_Profile;
+            }
         }
+        
+        if(_Result.session_id == Manager_Ingame.Instance.m_Client_Profile.Session_ID)
+        {
+            meNetData = _Result;
+            session_ID = meNetData.session_id;
+            nowRound = meNetData.Current_Round;
+            timeup = meNetData.Time_Up;
+            IsWinner = meNetData.Result_flag;
+            shootCount = meNetData.Shoot_Count;
+            rootingCount = meNetData.Getting_Count;
+            averageRoundTime = meNetData.averageRoundTime;
+            clearTime = meNetData.minTime;
+            retryCount = meNetData.Result_Count;
+        }
+        score = _Profile.Score;
+   
+
+        if (IsWinner) winText = "WIN";
+        else winText = "LOSE";
     }
 }

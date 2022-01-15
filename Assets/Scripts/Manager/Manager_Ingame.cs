@@ -358,8 +358,8 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
         for (int i = 0; i < profile_Length; i++)
         {
             resultScreenUI.GameResult[i] = new RoundResult();
-            resultScreenUI.GameResult[i].GetResultDataFromServer(_UserNo: i, _Result[i], _Profile[i]);
-            resultScreenUI.ShowResultScreen(_UserNo : i);
+            resultScreenUI.GameResult[i].GetResultDataFromServer(_Result[i], _Profile[i]);
+            resultScreenUI.ShowResultScreen();
         }
         
     }
@@ -441,7 +441,7 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
         // 프로필에 맞춰 캐릭터 오브젝트 생성
         foreach (User_Profile profile in m_Profiles)
         {
-            Debug.Log("캐릭터 생성 = " + profile.ID + " // 좌표 = " + profile.Current_Pos);
+            //Debug.Log("캐릭터 생성 = " + profile.ID + " // 좌표 = " + profile.Current_Pos);
 
             profile.Round_Init();
             if (profile.ID.Equals(m_Client_Profile.ID))
