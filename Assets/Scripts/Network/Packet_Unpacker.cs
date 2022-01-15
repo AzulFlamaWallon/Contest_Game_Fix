@@ -316,6 +316,9 @@ public class Packet_Unpacker
         {
             _result[i].Init();
 
+            _result[i].session_id = BitConverter.ToUInt16(_data, place);
+            place += sizeof(UInt16);
+
             _result[i].Time_Up = BitConverter.ToUInt64(_data, place);
             place += sizeof(UInt64);
 

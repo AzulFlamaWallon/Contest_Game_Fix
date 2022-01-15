@@ -306,6 +306,7 @@ namespace Network.Data
         public UInt16 Getting_Count;       // 아템 먹은 횟수 / 잡은 로그 수
         public UInt64 averageRoundTime;
         public UInt64 minTime;         //최소-가드 / 최장-로그
+        public UInt16 session_id;
         public UInt32 Result_Count;    // 재경기 카운트 수
 
         public void Init()
@@ -318,6 +319,7 @@ namespace Network.Data
             averageRoundTime = 0;
             minTime = 0;
             Result_Count = 0;
+            session_id = 0;
 
         }
     }
