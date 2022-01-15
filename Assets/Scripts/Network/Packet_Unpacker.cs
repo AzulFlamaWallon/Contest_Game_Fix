@@ -348,8 +348,7 @@ public class Packet_Unpacker
         for(int i =0; i<countSize; i++)
         {
             user[i] = new User_Profile();
-            strlen = BitConverter.ToUInt16(_data, place);
-            place += sizeof(UInt16);
+
             user[i].Session_ID = BitConverter.ToUInt16(_data, place);
             place += sizeof(UInt16);
 
