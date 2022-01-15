@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
-using Network.Data;
+﻿using Network.Data;
+using System;
 
 public class RoundResult
 {
@@ -36,37 +31,20 @@ public class RoundResult
 
     public void GetResultDataFromServer(Profile_RoundResult _Result, User_Profile _Profile)
     {
-        int length = Manager_Ingame.Instance.m_Profiles.Count;
-        for (int i = 0; i < length; i++)
-        {
-            if (_Profile.Session_ID == Manager_Ingame.Instance.m_Profiles[i].Session_ID)
-            {//먼기아상
-                meProfile = _Profile;
-                
-            }
-            else
-            {
-                meProfile = Manager_Ingame.Instance.m_Client_Profile;
-            }
-        }
-        
-        if(_Result.session_id == Manager_Ingame.Instance.m_Client_Profile.Session_ID)
-        {
-            meNetData = _Result;
-            session_ID = meNetData.session_id;
-            nowRound = meNetData.Current_Round;
-            timeup = meNetData.Time_Up;
-            IsWinner = meNetData.Result_flag;
-            shootCount = meNetData.Shoot_Count;
-            rootingCount = meNetData.Getting_Count;
-            averageRoundTime = meNetData.averageRoundTime;
-            clearTime = meNetData.minTime;
-            retryCount = meNetData.Result_Count;
-        }
-        score = _Profile.Score;
-   
+        meProfile        = _Profile;
+        score            = _Profile.Score;
+        meNetData        = _Result;
+        session_ID       = meNetData.session_id;
+        nowRound         = meNetData.Current_Round;
+        timeup           = meNetData.Time_Up;
+        IsWinner         = meNetData.Result_flag;
+        shootCount       = meNetData.Shoot_Count;
+        rootingCount     = meNetData.Getting_Count;
+        averageRoundTime = meNetData.averageRoundTime;
+        clearTime        = meNetData.minTime;
+        retryCount       = meNetData.Result_Count;
 
         if (IsWinner) winText = "WIN";
-        else winText = "LOSE";
+        else          winText = "LOSE";
     }
 }

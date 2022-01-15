@@ -358,10 +358,9 @@ public class Manager_Ingame : SingleToneMonoBehaviour<Manager_Ingame>
         for (int i = 0; i < profile_Length; i++)
         {
             resultScreenUI.GameResult[i] = new RoundResult();
-            resultScreenUI.GameResult[i].GetResultDataFromServer(_Result[i], _Profile[i]);
-            resultScreenUI.ShowResultScreen();
+            resultScreenUI.GameResult[i].GetResultDataFromServer(_Result[i], _Profile[i]);           
         }
-        
+        resultScreenUI.ShowResultScreen();
     }
 
     IEnumerator End_Game_Process()

@@ -37,7 +37,7 @@ public class ResultScreen : MonoBehaviour
     {
         Init();
 
-        int length = Manager_Ingame.Instance.m_Profiles.Count;
+        int length = GameResult.Length;
         for (int i = 0; i < length; i++)
         {
             if (GameResult[i].meProfile.Session_ID == Manager_Ingame.Instance.m_Client_Profile.Session_ID)
