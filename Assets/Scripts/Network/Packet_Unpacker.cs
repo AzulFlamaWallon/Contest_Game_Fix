@@ -305,7 +305,7 @@ public class Packet_Unpacker
         int place = 0;
         UInt16 countSize = 0;
         UInt16 resultSize = 0;
-        UInt16 strlen = 0;
+        //UInt16 strlen = 0;
         place += sizeof(UInt64); // 프로토콜 점프
 
         resultSize = BitConverter.ToUInt16(_data, place);

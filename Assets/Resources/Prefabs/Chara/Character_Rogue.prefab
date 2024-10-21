@@ -1336,7 +1336,7 @@ GameObject:
   - component: {fileID: 815687957390351434}
   m_Layer: 8
   m_Name: HeadCtrl
-  m_TagString: Player
+  m_TagString: RenderingPart
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

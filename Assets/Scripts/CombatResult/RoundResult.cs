@@ -36,15 +36,17 @@ public class RoundResult
         meNetData        = _Result;
         session_ID       = meNetData.session_id;
         nowRound         = meNetData.Current_Round;
-        timeup           = meNetData.Time_Up;
+        timeup           = (ulong)TimeSpan.FromMilliseconds(meNetData.Time_Up).TotalSeconds;
         IsWinner         = meNetData.Result_flag;
         shootCount       = meNetData.Shoot_Count;
         rootingCount     = meNetData.Getting_Count;
-        averageRoundTime = meNetData.averageRoundTime;
-        clearTime        = meNetData.minTime;
+        averageRoundTime = (ulong)TimeSpan.FromMilliseconds(meNetData.averageRoundTime).TotalSeconds;
+        clearTime        = (ulong)TimeSpan.FromMilliseconds(meNetData.minTime).TotalSeconds;
         retryCount       = meNetData.Result_Count;
 
         if (IsWinner) winText = "WIN";
         else          winText = "LOSE";
     }
+
+    
 }

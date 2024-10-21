@@ -13,15 +13,19 @@ public class SpawnerEx<T> : IEnumerable where T : IResettable
     public List<T> spawners = new List<T>();         // 스폰오브젝트 리스트
     public HashSet<T> deactiable = new HashSet<T>(); // 비활성화 가능 해쉬셋
     ISpawnFactory<T> factory;                       // 뿌릴 오브젝트 팩토리
+    int maxCount;
 
     public SpawnerEx(ISpawnFactory<T> _SpawnFactory) : this(_SpawnFactory, 3) { } // 기본생성자는 3개만
     public SpawnerEx(ISpawnFactory<T> _SpawnFactory, int _MaxSpawnAmount)
     {
         factory = _SpawnFactory;
-        for(int i = 0; i< _MaxSpawnAmount; i++)
+        maxCount = _MaxSpawnAmount;
+        for (int i = 0; i< _MaxSpawnAmount; i++)
         {
             Spawn();
-        }    
+        }
+
+        
     }
 
     /// <summary>
@@ -38,6 +42,8 @@ public class SpawnerEx<T> : IEnumerable where T : IResettable
                 return spawners[i];
             }
         }
+
+
         T newspawners = Spawn();
         deactiable.Add(newspawners);
         return newspawners;
@@ -51,8 +57,11 @@ public class SpawnerEx<T> : IEnumerable where T : IResettable
 
     T Spawn()
     {
+        //T spawner = default;
+
         T spawner = factory.Spawn();
         spawners.Add(spawner);
+
         return spawner;
     }
 

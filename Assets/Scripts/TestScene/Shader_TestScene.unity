@@ -141,7 +141,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   owner: {fileID: 919752097}
   oriShader: {fileID: 45, guid: 0000000000000000f000000000000000, type: 0}
-  cloakShader: {fileID: 4800000, guid: 44238eb007e614f44930765400bf8efb, type: 3}
+  cloakShader: {fileID: 4800000, guid: 548d892daeff1f34b8e27e12140a66d8, type: 3}
   cloakDuration: 5
   cloakOpacity: 0
   cloakDeform: 0
@@ -322,6 +322,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 815687957390699938, guid: c20eb0463e2958f499269de91c8b4d3a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5394443342023667793, guid: c20eb0463e2958f499269de91c8b4d3a,
         type: 3}
       propertyPath: m_LocalPosition.x

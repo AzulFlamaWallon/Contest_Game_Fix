@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &8033949035277424587
+--- !u!1 &3938200489152102271
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,50 +8,49 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8033949035277424581}
-  - component: {fileID: 8033949035277424586}
-  - component: {fileID: 1503233511255051181}
+  - component: {fileID: 8201609660124254574}
+  - component: {fileID: 2762409489289710265}
+  - component: {fileID: -9204278838746061695}
   m_Layer: 0
-  m_Name: BulletTrajectory
+  m_Name: BulletTraj_Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &8033949035277424581
+--- !u!4 &8201609660124254574
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8033949035277424587}
+  m_GameObject: {fileID: 3938200489152102271}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 10, y: 1, z: 1}
+  m_LocalPosition: {x: 0.785, y: 0.56, z: -9.7941}
+  m_LocalScale: {x: 2.4509313, y: 1.8316022, z: 2.2469342}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!96 &8033949035277424586
-TrailRenderer:
-  serializedVersion: 2
+--- !u!120 &2762409489289710265
+LineRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8033949035277424587}
+  m_GameObject: {fileID: 3938200489152102271}
   m_Enabled: 1
   m_CastShadows: 2
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
   m_MotionVectors: 0
-  m_LightProbeUsage: 1
+  m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: ad4783ac72aa71349b2617d65e4305ad, type: 2}
+  - {fileID: 2100000, guid: 16775ded9b52d424e822b7cf481855fd, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -72,38 +71,40 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 0.1
+  m_Positions:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 1}
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 1.4191282
+    widthMultiplier: 0.1
     widthCurve:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
-        time: 0.034770787
-        value: 0
-        inSlope: 3.537723
-        outSlope: 3.537723
+        time: 0.3463204
+        value: 0.8229141
+        inSlope: 0
+        outSlope: 0
         tangentMode: 0
         weightedMode: 0
         inWeight: 0
-        outWeight: 0.18448284
+        outWeight: 0
       - serializedVersion: 3
-        time: 0.73730594
-        value: 0.6458308
-        inSlope: 0.15200199
-        outSlope: 0.15200199
+        time: 0.9956665
+        value: 0.5833308
+        inSlope: 0.057291668
+        outSlope: 0.057291668
         tangentMode: 0
         weightedMode: 0
-        inWeight: 0.39016193
-        outWeight: 0.33333334
+        inWeight: 0.3134302
+        outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.07075471, g: 0.37021077, b: 1, a: 1}
-      key1: {r: 0, g: 0.9693699, b: 1, a: 1}
+      key0: {r: 1, g: 0.9880785, b: 0, a: 1}
+      key1: {r: 1, g: 1, b: 1, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -129,22 +130,21 @@ TrailRenderer:
       m_Mode: 0
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
-    numCornerVertices: 10
+    numCornerVertices: 0
     numCapVertices: 0
     alignment: 0
     textureMode: 0
     shadowBias: 0.5
-    generateLightingData: 1
-  m_MinVertexDistance: 0.1
-  m_Autodestruct: 1
-  m_Emitting: 1
---- !u!114 &1503233511255051181
+    generateLightingData: 0
+  m_UseWorldSpace: 0
+  m_Loop: 0
+--- !u!114 &-9204278838746061695
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8033949035277424587}
+  m_GameObject: {fileID: 3938200489152102271}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e858fc6ccef7fcd47acaa8d519c27963, type: 3}
@@ -160,5 +160,5 @@ MonoBehaviour:
     IsPenetrate: 0
     penetrateCount: 0
     pelletDest: {x: 0, y: 0, z: 0}
-  speed: 0
+  speed: 10
   rayPositon: {x: 0, y: 0, z: 0}

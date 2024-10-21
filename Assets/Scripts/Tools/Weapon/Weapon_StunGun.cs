@@ -1,5 +1,6 @@
 ﻿using Network.Data;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -15,7 +16,7 @@ public class Weapon_StunGun : Tool, I_IK_Shotable
     [Tooltip("총구 화염")]
     public GameObject effect_Fire;
     public GameObject effect_Traj_Prefab;
-    private GameObject m_Effect_Traj;
+    
     [Tooltip("발사음")]
     public AudioSource sfx_Fire;
 
@@ -35,8 +36,10 @@ public class Weapon_StunGun : Tool, I_IK_Shotable
 
     List<UInt16>  victim_IDs = new List<UInt16>();
     List<Vector3> impact_Pos = new List<Vector3>();
-  
-    SpawnerEx<PelletTrail> m_PelletTrail;
+
+    SpawnerEx<PelletTrail> m_PelletTrailSpawner;
+    Spawner                m_ShotEffectSpawner;
+    Spawner                m_EffectTrajSpawner;
 
     public AnimationClip Get_Aim_Anim()
     {
@@ -59,7 +62,10 @@ public class Weapon_StunGun : Tool, I_IK_Shotable
         {
             Manager_Network.Instance.e_RoundStart.AddListener(new UnityAction(RestoreThiefShotAble));           
         }
-        m_Effect_Traj = Instantiate(effect_Traj_Prefab, Get_Muzzle());
+        m_EffectTrajSpawner  = new Spawner(effect_Traj_Prefab, 1);
+        m_ShotEffectSpawner  = new Spawner(effect_Fire, 1);
+        m_PelletTrailSpawner = new SpawnerEx<PelletTrail>(new PrefabSpawnFactory<PelletTrail>(pelletTrail.gameObject), 3);
+
     }
     public void RestoreThiefShotAble()
     {
@@ -83,25 +89,41 @@ public class Weapon_StunGun : Tool, I_IK_Shotable
 
         pelletTrail.currentObj = pelletInfo; // 펠릿트레일의 펠릿에 커스텀한 펠릿정보를 보내주자.
 
+        DrawFireEffect(attacker, 0.2f);
+
         for (byte i = 0; i < pelletTrail.currentObj.pelletCount; i++) // 풀링으로 교체해주자.
         {
             Ray ray = new Ray(attacker.m_CameraAxis.position + fwdDir * 2f, fwdDir);
-            GameObject trailobj = Instantiate(pelletTrail.gameObject, now_pos, attacker.m_ToolAxis.rotation);
+
+            PelletTrail trailobj = m_PelletTrailSpawner.Allocate();
+
+            if (trailobj == null)
+            {
+                continue;
+            }
+
+            trailobj.transform.position = now_pos;
+            trailobj.transform.rotation = Quaternion.LookRotation(fwdDir);
+            trailobj.gameObject.SetActive(true); // 활성화
+
             victim_IDs.Add(0);
+
             if (Physics.Raycast(ray, out RaycastHit hit, pelletTrail.currentObj.pelletDist))
             {
-                trailobj.GetComponent<PelletTrail>().rayPositon = hit.point;
+                trailobj.rayPositon = hit.point;
                 CharacterController victim = hit.collider.gameObject.GetComponentInParent<CharacterController>();
                 if (victim != null)
                     victim_IDs[i] = victim.m_MyProfile.Session_ID;
+
                 impact_Pos.Add(hit.point);
             }
             else
-                impact_Pos.Add(ray.GetPoint(pelletTrail.currentObj.pelletDist));
+            {
+                trailobj.rayPositon = ray.GetPoint(pelletTrail.currentObj.pelletDist);
+                impact_Pos.Add(trailobj.rayPositon);
+            }
 
-            trailobj.GetComponent<PelletTrail>().rayPositon = ray.GetPoint(pelletTrail.currentObj.pelletDist);
-
-            DrawFireEffect(attacker, 0.2f);
+            StartCoroutine(DeActiveTrail(trailobj, 0.2f));
         }
 
         SendShotResult(attacker, victim_IDs, impact_Pos);
@@ -125,13 +147,31 @@ public class Weapon_StunGun : Tool, I_IK_Shotable
     /// <param name="_DestroyDur"></param>
     void DrawFireEffect(CharacterController _Attacker, float _DestroyDur)
     {
-        GameObject effect = Instantiate(effect_Fire);
-        effect.transform.SetParent(_Attacker.m_ToolAxis); // 총구에 이펙트 붙이기
-        m_Effect_Traj.SetActive(true);
-        m_Effect_Traj.transform.SetParent(_Attacker.m_ToolAxis);
-        effect.transform.SetPositionAndRotation(gunMuzzle.position, _Attacker.m_ToolAxis.rotation);
-        Destroy(effect, _DestroyDur);
-        m_Effect_Traj.SetActive(false);
+        // 총구에 이펙트 붙이기
+        GameObject effect = m_ShotEffectSpawner.GetSpawnedObject();
+        GameObject effectTraj = m_EffectTrajSpawner.GetSpawnedObject();
+
+        effect.SetActive(true);
+        effectTraj.SetActive(true);
+        effect.transform.SetPositionAndRotation(gunMuzzle.position, Quaternion.LookRotation(_Attacker.m_CameraAxis.forward));
+        effectTraj.transform.SetPositionAndRotation(gunMuzzle.position, Quaternion.LookRotation(_Attacker.m_CameraAxis.forward));
+
+
+        StartCoroutine(Deactivate(effect, _DestroyDur));
+        StartCoroutine(Deactivate(effectTraj, _DestroyDur));
+
+    }
+
+    IEnumerator DeActiveTrail(PelletTrail _Trail, float _Time)
+    {
+        yield return new WaitForSeconds(_Time);
+        m_PelletTrailSpawner.DeActive(_Trail);
+    }
+
+    IEnumerator Deactivate(GameObject obj, float time)
+    {
+        yield return new WaitForSeconds(time);
+        obj.SetActive(false);
     }
 
     void SendShotResult(CharacterController _Attacker, List<UInt16> _VictimSecIDs, List<Vector3> _ImpactPos)

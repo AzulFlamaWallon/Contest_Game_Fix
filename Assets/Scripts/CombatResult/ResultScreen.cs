@@ -1,12 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 public class ResultScreen : MonoBehaviour
 {
     [Header("결과화면 타이틀")]
-    public Text  resultTitle;
+    public Text resultTitle;
     public Image resultBackGround;
 
     [Header("결과화면 항목들")]
@@ -38,39 +37,42 @@ public class ResultScreen : MonoBehaviour
         Init();
 
         int length = GameResult.Length;
+        var clientSessionID = Manager_Ingame.Instance.m_Client_Profile.Session_ID;
+
         for (int i = 0; i < length; i++)
         {
-            if (GameResult[i].meProfile.Session_ID == Manager_Ingame.Instance.m_Client_Profile.Session_ID)
+            // 내 프로필과 받아온 내 네트워크 세션이 일치하는지 확인
+            if (GameResult[i].meProfile.Session_ID == clientSessionID && GameResult[i].meNetData.session_id == clientSessionID)
             {
-                Debug.LogFormat("GameResult[i].meProfile.Session_ID : {0}, Manager_Ingame.Instance.m_Client_Profile.Session_ID : {1}", GameResult[i].meProfile.Session_ID, Manager_Ingame.Instance.m_Client_Profile.Session_ID);
-                if(GameResult[i].meNetData.session_id == Manager_Ingame.Instance.m_Client_Profile.Session_ID)
+                Debug.LogFormat($"NetProfile_Session_ID : {GameResult[i].meProfile.Session_ID}, InGameProfile_Session_ID : {clientSessionID}");
+
+                resultCompo[0].text = $"소탕시간 : {GameResult[i].timeup} 초";
+                resultCompo[1].text = $"발포횟수 : {GameResult[i].shootCount} 번";
+                resultCompo[2].text = $"검거횟수 : {GameResult[i].rootingCount} 번";
+                resultCompo[3].text = $"평균소탕시간 : {GameResult[i].averageRoundTime} 초";
+                resultCompo[4].text = $"최소소탕시간 : {GameResult[i].clearTime} 초";
+
+                if (GameResult[i].meProfile.Role_Index == 1)
                 {
-                    switch (GameResult[i].meProfile.Role_Index)
-                    {
-                        case 1:
-                            resultCompo[0].text = "소탕시간 : " + GameResult[i].timeup.ToString();
-                            resultCompo[1].text = "발포횟수 : " + GameResult[i].shootCount.ToString();
-                            resultCompo[2].text = "검거횟수" + GameResult[i].rootingCount.ToString();
-                            resultCompo[3].text = "평균소탕시간" + GameResult[i].averageRoundTime.ToString();
-                            resultCompo[4].text = "최소소탕시간" + GameResult[i].clearTime.ToString();
-                            winText.text = "Guard " + GameResult[i].winText;
-                             
-                            break;
-                        case 2:
-                            resultCompo[0].text = "생존시간 : " + GameResult[i].timeup.ToString();
-                            resultCompo[1].text = "가드스턴수 : " + GameResult[i].shootCount.ToString();
-                            resultCompo[2].text = "물건획득수 : " + GameResult[i].rootingCount.ToString();
-                            resultCompo[3].text = "평균생존시간 : " + GameResult[i].averageRoundTime.ToString();
-                            resultCompo[4].text = "최장 생존 시간 :" + GameResult[i].clearTime.ToString();
-                            winText.text = "Rogue " + GameResult[i].winText;
-                            winText.color = Color.red;
-                            break;
-                    }
-                    resultCompo[5].text = "스코어 " + GameResult[i].score.ToString();
-                }           
+                    winText.text = $"Guard {GameResult[i].winText}";
+                    winText.color = Color.blue; 
+                }
+                else if (GameResult[i].meProfile.Role_Index == 2)
+                {
+                    resultCompo[0].text = $"생존시간 : {GameResult[i].timeup} 초";
+                    resultCompo[1].text = $"가드스턴수 : {GameResult[i].shootCount} 번";
+                    resultCompo[2].text = $"물건획득수 : {GameResult[i].rootingCount} 번";
+                    resultCompo[3].text = $"평균생존시간 : {GameResult[i].averageRoundTime} 초";
+                    resultCompo[4].text = $"최장생존시간 : {GameResult[i].clearTime} 초";
+                    winText.text = $"Rouge {GameResult[i].winText}";
+                    winText.color = Color.red;
+                }
+
+                resultCompo[5].text = $"스코어 : {GameResult[i].score} 점";
             }
         }
     }
+
 
     void Retry()
     {

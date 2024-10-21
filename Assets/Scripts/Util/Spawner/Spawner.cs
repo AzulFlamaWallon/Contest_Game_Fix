@@ -1,70 +1,45 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
-public class Spawner : SingleToneMonoBehaviour<Spawner>
+public class Spawner
 {
-    [HideInInspector]
-    public List<GameObject> spawnObjs;
-    public GameObject spawnObj;
-    public int maxObjs;
+    List<GameObject> spawnObjs = new List<GameObject>();
+    GameObject spawnObj;
+    int maxObjs = 10;
 
-    void Start()
+    // 기본 생성자
+    public Spawner(GameObject objectToSpawn) : this(objectToSpawn, 1) { }
+
+    // 오브젝트 및 개수 설정 생성자
+    public Spawner(GameObject objectToSpawn, int count)
     {
-        spawnObjs = new List<GameObject>();
-        GameObject temp;
-        for(int i = 0; i < maxObjs;i++)
+        Create(objectToSpawn, count);
+    }
+
+    void Create(GameObject objectToSpawn, int count)
+    {
+        maxObjs = count;
+
+        for (int i = 0; i <= maxObjs; i++)
         {
-            temp = Instantiate(spawnObj);
+            GameObject temp = GameObject.Instantiate(objectToSpawn);
+            spawnObj = temp;
             temp.SetActive(false);
             spawnObjs.Add(temp);
         }
     }
 
-    public void SlowSpawn()
-    {
-        if(spawnObjs != null)
-            spawnObjs.Clear();
-
-        spawnObjs = new List<GameObject>();
-        GameObject temp;
-        for (int i = 0; i < maxObjs; i++)
-        {
-            temp = Instantiate(spawnObj);
-            temp.SetActive(false);
-            spawnObjs.Add(temp);
-        }
-    }
 
     public GameObject GetSpawnedObject()
     {
-        for(int i = 0; i < maxObjs; i++)
+        foreach (var obj in spawnObjs)
         {
-            if(!spawnObjs[i].activeInHierarchy)
+            if (!obj.activeInHierarchy)
             {
-                return spawnObjs[i];
+                return obj;
             }
         }
         return null;
-    }
-
-    public void SlowSelfDeactivateObject(GameObject _Obj, float _Time)
-    {
-        StartCoroutine(Deactivate(_Obj, _Time));
-    }
-
-    public void SelfDeactivateObject(ref GameObject _Obj)
-    {
-        _Obj.SetActive(false);
-    }
-
-    IEnumerator Deactivate(GameObject _Obj, float _Time)
-    {
-        yield return new WaitForSeconds(_Time);
-        _Obj.SetActive(false);
-        yield return null;
     }
 }

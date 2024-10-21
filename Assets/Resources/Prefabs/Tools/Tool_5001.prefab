@@ -95,7 +95,7 @@ MonoBehaviour:
     IsPenetrate: 0
     penetrateCount: 0
     pelletDest: {x: 0, y: 0, z: 0}
-  pelletTrail: {fileID: 1503233511255051181, guid: 7b03065b1708a6545956b28d9b0a501d,
+  pelletTrail: {fileID: -9204278838746061695, guid: 916d6745bce68aa4c9e7af6f6afd5848,
     type: 3}
   stunDuration: 5
   m_IsDebug: 1
